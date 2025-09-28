@@ -1,56 +1,33 @@
 ﻿using FCG.Payments.Application.DTO.Order;
 using FCG.Payments.Application.Services.Interfaces;
-using FCG.Payments.Data.Repository;
-using FCG.Payments.Data.Repository.Interfaces;
-using FCG.Payments.Domain.Entities;
-using FCG.Payments.Domain.Enums;
 using FCG.Payments.Domain.Events.Order;
+using FCG.Payments.Infra.Data.Repository.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.Payments.Application.Services
 {
-    public class OrderService(IOrderRepository orderRepository, ICartRepository cartRepository, IEventStore eventStore) : IOrderService
+    public class OrderService(
+        ILogger<OrderService> logger,
+        IOrderRepository orderRepository,
+        IEventStore eventStore,
+        IUserService userService,
+        IPaymentGatewayService paymentGateway
+    ) : IOrderService
     {
-        public async Task<OrderDto> CreateOrderFromCartAsync(Guid userId)
-        {
-            var cart = await cartRepository.GetByUserIdAsync(userId)
-                       ?? throw new InvalidOperationException("Cart not found");
-
-            if (cart.Items.Count == 0)
-                throw new InvalidOperationException("Cart is empty");
-
-            var order = new Order(userId, cart.Items);
-
-            //if (cart.DiscountValue > 0)
-            //{
-            //    order.ApplyDiscount(cart.DiscountValue);
-            //}
-
-            await orderRepository.AddAsync(order);
-
-            await eventStore.SaveAsync(new OrderCreatedEvent
-            {
-                OrderId = order.Id,
-                UserId = userId,
-                TotalPrice = order.Total
-            });
-
-            // depois de criar o pedido, limpa o carrinho
-            cart.Clear();
-            await cartRepository.UpdateAsync(cart);
-
-            return ToDto(order);
-        }
-
         public async Task<OrderDto?> GetOrderAsync(Guid orderId)
         {
             var order = await orderRepository.GetByIdAsync(orderId);
-            return order == null ? null : ToDto(order);
+            return order == null ? null : OrderDto.ToDto(order);
         }
 
         public async Task<PaymentResult> PayOrderAsync(Guid userId, Guid orderId, PayOrderDto dto)
         {
+            logger.LogDebug("Processing payment for order {OrderId} by user {UserId}", orderId, userId);
             var order = await orderRepository.GetByIdAsync(orderId)
                        ?? throw new InvalidOperationException("Order not found");
+
+            var gameIds = order.Items.Select(i => i.GameId).ToArray();
+            logger.LogDebug("Order {OrderId} has {ItemCount} games: {GamesIds}", orderId, order.Items.Count, string.Join(", ", gameIds));
 
             if (order.UserId != userId)
                 throw new UnauthorizedAccessException("Not your order");
@@ -58,68 +35,42 @@ namespace FCG.Payments.Application.Services
             if (order.IsPaid)
                 throw new InvalidOperationException("Order already paid");
 
-            if(dto.Discount != null)
+            var paymentSucceeded = await paymentGateway.SendPaymentRequest(); 
+
+            if (!paymentSucceeded)
             {
-                order.ApplyDiscount(dto.Discount.Value);
-                await eventStore.SaveAsync(new OrderDiscountAppliedEvent
+                await eventStore.SaveAsync(new PaymentFailedEvent
                 {
+                    UserId = userId,
                     OrderId = order.Id,
-                    Discount = dto.Discount,
-                });
-            }
-
-            // simulação do pagamento
-            var paymentSucceeded = true; // aqui você chamaria o gateway de pagamento
-
-            if (paymentSucceeded)
-            {
-                order.MarkAsPaid();
-                await orderRepository.UpdateAsync(order);
-
-                await eventStore.SaveAsync(new OrderPaidEvent
-                {
-                    OrderId = order.Id,
-                    PaymentMethod = dto.Method
+                    PaymentMethod = dto.Method,
+                    Reason = "Payment gateway declined"
                 });
 
                 return new PaymentResult()
                 {
-                    Success = true,
-                    Message = "Payment successful"
+                    Success = false,
+                    Message = "Payment failed"
                 };
             }
 
-            await eventStore.SaveAsync(new PaymentFailedEvent
+            order.MarkAsPaid();
+            await orderRepository.UpdateAsync(order);
+
+            var taskLibrary = userService.AddGamesInLibraryAsync(userId, gameIds);
+            var taskEvent = eventStore.SaveAsync(new OrderPaidEvent
             {
-                UserId = userId,
                 OrderId = order.Id,
-                PaymentMethod = dto.Method,
-                Reason = "Payment gateway declined"
+                PaymentMethod = dto.Method
             });
+
+            await Task.WhenAll(taskLibrary, taskEvent);
 
             return new PaymentResult()
             {
-                Success = false,
-                Message = "Payment failed"
+                Success = true,
+                Message = "Payment successful"
             };
-        }
-
-        private static OrderDto ToDto(Order order)
-        {
-            var dto = new OrderDto()
-            {
-                Id = order.Id,
-                CreatedAt = order.CreatedAt,
-                Items = order.Items.Select(i => new OrderItemDto()
-                {
-                    GameId = i.GameId,
-                    Price = i.UnitPrice
-
-                }).ToList(),
-                Status = order.Status,
-                Total = order.Total,
-            };
-            return dto;
         }
     }
 

@@ -7,36 +7,32 @@ namespace FCG.Payments.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
-    public class CartController(ICartService cartService) : ControllerBase
+    [Authorize]
+    public class CartController(ICartService cartService) : ApiBaseController
     {
-        private Guid GetUserId()
-        {
-            return Guid.Parse("1e348abb-f544-4242-8654-0b5caa33379a"); // Guid.Parse(User.FindFirst("sub")!.Value);
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetCart()
         {
             var userId = GetUserId();
             var cart = await cartService.GetCartAsync(userId);
-            return Ok(cart);
+
+            return Success(cart, "Carrinho encontrado/criado com sucesso.");
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> AddItem([FromBody] AddCartItemDto dto)
         {
             var userId = GetUserId();
-            await cartService.AddItemAsync(userId, dto.GameId, dto.Quantity);
-            return Ok();
+            var cart = await cartService.AddItemAsync(userId, dto.GameId, dto.Quantity);
+            return CreatedResponse(cart, "Item adicionado com sucesso.");
         }
 
         [HttpDelete("remove/{gameId}")]
         public async Task<IActionResult> RemoveItem(Guid gameId)
         {
             var userId = GetUserId();
-            await cartService.RemoveItemAsync(userId, gameId);
-            return Ok();
+            var cart = await cartService.RemoveItemAsync(userId, gameId);
+            return Success(cart, "Item removido com sucesso.");
         }
 
         [HttpDelete("clear")]
@@ -44,7 +40,15 @@ namespace FCG.Payments.API.Controllers
         {
             var userId = GetUserId();
             await cartService.ClearCartAsync(userId);
-            return Ok();
+            return NoContent();
+        }
+
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout()
+        {
+            var userId = GetUserId();
+            var order = await cartService.CheckoutCartAsync(userId);
+            return Success(order, "Ordem de pagamento criada com sucesso.");
         }
     }
 }

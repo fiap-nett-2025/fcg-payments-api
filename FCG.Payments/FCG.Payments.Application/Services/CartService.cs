@@ -1,45 +1,53 @@
-﻿using FCG.Payments.Application.DTO;
-using FCG.Payments.Application.DTO.Cart;
+﻿using FCG.Payments.Application.DTO.Cart;
+using FCG.Payments.Application.DTO.Order;
 using FCG.Payments.Application.Services.Interfaces;
-using FCG.Payments.Data.Repository.Interfaces;
 using FCG.Payments.Domain.Entities;
 using FCG.Payments.Domain.Events.Cart;
+using FCG.Payments.Domain.Events.Order;
+using FCG.Payments.Infra.Data.Repository.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.Payments.Application.Services
 {
-    public class CartService(ICartRepository cartRepository, IEventStore eventStore) : ICartService
+    public class CartService(
+        ILogger<CartService> logger,
+        ICartRepository cartRepository,
+        IOrderRepository orderRepository,
+        IEventStore eventStore,
+        IGameService gameService
+    ) : ICartService
     {
         public async Task<CartDto> GetCartAsync(Guid userId)
         {
+            logger.LogDebug("Retrieving cart for user {UserId}", userId);
             var cart = await cartRepository.GetByUserIdAsync(userId);
 
-            if (cart == null)
+            if (cart is null)
             {
                 cart = new Cart(userId);
-                await cartRepository.AddAsync(cart);
-
-                await eventStore.SaveAsync(new CartCreatedEvent
+                var taskInsert = cartRepository.AddAsync(cart);
+                var taskEvent = eventStore.SaveAsync(new CartCreatedEvent
                 {
                     CartId = cart.Id,
                     UserId = userId
                 });
+
+                await Task.WhenAll(taskInsert, taskEvent);
             }
 
-            return ToDto(cart);
+            return CartDto.ToDto(cart);
         }
 
-        public async Task AddItemAsync(Guid userId, Guid gameId, int quantity)
+        public async Task<Cart> AddItemAsync(Guid userId, Guid gameId, int quantity)
         {
+            if (quantity <= 0)
+                throw new InvalidOperationException("Invalid quantity");
+
             var cart = await cartRepository.GetByUserIdAsync(userId)
                        ?? new Cart(userId);
 
-            // TODO: GET API DE GAMES
-            var game = new GameDto()
-            {
-                Id = gameId,
-                Title = "Sample Game",
-                Price = 59.99m
-            };
+            var game = await gameService.GetGameByIdAsync(gameId)
+                ?? throw new InvalidOperationException("Game not found");
 
             cart.AddItem(gameId, quantity, game.Price);
 
@@ -52,9 +60,11 @@ namespace FCG.Payments.Application.Services
                 Quantity = quantity,
                 UnitPrice = game.Price
             });
+
+            return cart;
         }
 
-        public async Task RemoveItemAsync(Guid userId, Guid gameId)
+        public async Task<Cart> RemoveItemAsync(Guid userId, Guid gameId)
         {
             var cart = await cartRepository.GetByUserIdAsync(userId)
                        ?? throw new InvalidOperationException("Cart not found");
@@ -68,6 +78,8 @@ namespace FCG.Payments.Application.Services
                 CartId = cart.Id,
                 GameId = gameId
             });
+
+            return cart;
         }
 
         public async Task ClearCartAsync(Guid userId)
@@ -85,18 +97,31 @@ namespace FCG.Payments.Application.Services
             });
         }
 
-        private static CartDto ToDto(Cart cart)
+        public async Task<OrderDto> CheckoutCartAsync(Guid userId)
         {
-            return new CartDto()
+            logger.LogDebug("Creating order from cart for user {UserId}", userId);
+            var cart = await cartRepository.GetByUserIdAsync(userId)
+                       ?? throw new InvalidOperationException("Cart not found");
+
+            logger.LogDebug("Cart {CartId} from user {UserId} has {ItemCount} items", cart.Id, userId, cart.Items.Count);
+            if (cart.Items.Count == 0)
+                throw new InvalidOperationException("Cart is empty");
+
+            var order = new Order(userId, cart.Items);
+
+            var taskInsertOrder = orderRepository.AddAsync(order);
+            var taskEvent = eventStore.SaveAsync(new OrderCreatedEvent
             {
-                Items = [.. cart.Items.Select(i => new CartItemDto()
-                {
-                    GameId = i.GameId,
-                    Quantity = i.Quantity,
-                    UnitPrice = i.UnitPrice
-                })],
-                Total = cart.GetTotal()
-            };
+                OrderId = order.Id,
+                UserId = userId,
+                TotalPrice = order.Total
+            });
+
+            await Task.WhenAll(taskInsertOrder, taskEvent);
+
+            cart.Clear();
+            await cartRepository.UpdateAsync(cart);
+            return OrderDto.ToDto(order);
         }
     }
 }

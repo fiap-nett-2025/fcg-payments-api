@@ -7,9 +7,6 @@ namespace FCG.Payments.Domain.Entities
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.String)]
         public Guid Id { get; set; } = Guid.NewGuid();
-
-        [BsonRepresentation(MongoDB.Bson.BsonType.String)]
-        public Guid AggregateId { get; set; }
         public DateTime OccurredAt { get; set; } = DateTime.UtcNow;
         public string EventType => GetType().Name;
     }

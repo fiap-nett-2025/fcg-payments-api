@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
-namespace FCG.Payments.Data
+namespace FCG.Payments.Infra.Data
 {
     public static class DependecyInjectionConfiguration
     {
@@ -14,7 +14,7 @@ namespace FCG.Payments.Data
                 return new MongoClient(settings.ConnectionString);
             });
 
-            services.AddSingleton<IMongoDatabase>(sp =>
+            services.AddSingleton(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<MongoDbOptions>>().Value;
                 var client = new MongoClient(settings.ConnectionString);

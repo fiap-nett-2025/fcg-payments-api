@@ -1,4 +1,4 @@
-﻿namespace FCG.Payments.Data
+﻿namespace FCG.Payments.Infra.Data
 {
     public class MongoDbOptions
     {

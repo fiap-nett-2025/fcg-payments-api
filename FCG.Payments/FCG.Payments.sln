@@ -9,7 +9,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Domain", "FCG.Payments.Domain\FCG.Payments.Domain.csproj", "{E1810C56-023D-4986-B73A-98D17BFCCAF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Data", "FCG.Payments.Data\FCG.Payments.Data.csproj", "{76A0AC45-7DE9-40FB-B06E-42EDD4218052}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Infra.Data", "FCG.Payments.Infra.Data\FCG.Payments.Infra.Data.csproj", "{76A0AC45-7DE9-40FB-B06E-42EDD4218052}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - API", "1 - API", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{C060ED39-9E69-455A-ACAA-E45D3E9E02DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{BF2642F4-0293-4730-A7F0-7344D816BE92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", "{3CC1C5FE-A8F3-4B41-9E45-5711044E3544}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{6780C07A-E522-4600-92A2-EE0111995C18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +46,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7E27A479-F340-4CB9-B8CF-DA4172D6E964} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{F9044C2C-31BC-4D06-A7B2-660434F2CF35} = {C060ED39-9E69-455A-ACAA-E45D3E9E02DD}
+		{E1810C56-023D-4986-B73A-98D17BFCCAF7} = {3CC1C5FE-A8F3-4B41-9E45-5711044E3544}
+		{76A0AC45-7DE9-40FB-B06E-42EDD4218052} = {BF2642F4-0293-4730-A7F0-7344D816BE92}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE1F7273-D347-4207-9272-72E5384E3F3F}

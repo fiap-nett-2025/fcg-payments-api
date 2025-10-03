@@ -21,8 +21,8 @@ namespace FCG.Payments.API.Controllers
         [HttpPost("{orderId}/pay")]
         public async Task<IActionResult> PayOrder(Guid orderId, [FromBody] PayOrderDto dto)
         {
-            var userId = GetUserId();
-            var result = await orderService.PayOrderAsync(userId, orderId, dto);
+            var user = GetUserFromRequest();
+            var result = await orderService.PayOrderAsync(user, orderId, dto);
 
             return result.Success ? Ok(result) : BadRequest(result);
         }

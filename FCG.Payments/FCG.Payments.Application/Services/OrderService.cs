@@ -1,5 +1,6 @@
 ﻿using FCG.Payments.Application.DTO.Order;
 using FCG.Payments.Application.Services.Interfaces;
+using FCG.Payments.Domain.Entities;
 using FCG.Payments.Domain.Events.Order;
 using FCG.Payments.Infra.Data.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ namespace FCG.Payments.Application.Services
         IOrderRepository orderRepository,
         IEventStore eventStore,
         IUserService userService,
+        IGameService gameService,
         IPaymentGatewayService paymentGateway
     ) : IOrderService
     {
@@ -20,28 +22,28 @@ namespace FCG.Payments.Application.Services
             return order == null ? null : OrderDto.ToDto(order);
         }
 
-        public async Task<PaymentResult> PayOrderAsync(Guid userId, Guid orderId, PayOrderDto dto)
+        public async Task<PaymentResult> PayOrderAsync(User user, Guid orderId, PayOrderDto dto)
         {
-            logger.LogDebug("Processing payment for order {OrderId} by user {UserId}", orderId, userId);
+            logger.LogDebug("Processing payment for order {OrderId} by user {UserId}", orderId, user.Id);
             var order = await orderRepository.GetByIdAsync(orderId)
                        ?? throw new InvalidOperationException("Order not found");
 
             var gameIds = order.Items.Select(i => i.GameId).ToArray();
             logger.LogDebug("Order {OrderId} has {ItemCount} games: {GamesIds}", orderId, order.Items.Count, string.Join(", ", gameIds));
 
-            if (order.UserId != userId)
+            if (order.UserId != user.Id)
                 throw new UnauthorizedAccessException("Not your order");
 
             if (order.IsPaid)
                 throw new InvalidOperationException("Order already paid");
 
-            var paymentSucceeded = await paymentGateway.SendPaymentRequest(); 
+            var paymentSucceeded = await paymentGateway.SendPaymentRequest(user, orderId); 
 
             if (!paymentSucceeded)
             {
                 await eventStore.SaveAsync(new PaymentFailedEvent
                 {
-                    UserId = userId,
+                    UserId = user.Id,
                     OrderId = order.Id,
                     PaymentMethod = dto.Method,
                     Reason = "Payment gateway declined"
@@ -57,7 +59,8 @@ namespace FCG.Payments.Application.Services
             order.MarkAsPaid();
             await orderRepository.UpdateAsync(order);
 
-            var taskLibrary = userService.AddGamesInLibraryAsync(userId, gameIds);
+            var taskPopularity = gameService.IncreaseGamesPopularity(user, gameIds);
+            var taskLibrary = userService.AddGamesInLibraryAsync(user, gameIds);
             var taskEvent = eventStore.SaveAsync(new OrderPaidEvent
             {
                 OrderId = order.Id,

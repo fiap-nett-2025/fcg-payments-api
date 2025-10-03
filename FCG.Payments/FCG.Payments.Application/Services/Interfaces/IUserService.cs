@@ -1,7 +1,9 @@
-﻿namespace FCG.Payments.Application.Services.Interfaces
+﻿using FCG.Payments.Domain.Entities;
+
+namespace FCG.Payments.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        Task AddGamesInLibraryAsync(Guid userId, params Guid[] gamesId);
+        Task AddGamesInLibraryAsync(User user, params Guid[] gamesId);
     }
 }

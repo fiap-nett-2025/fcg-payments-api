@@ -12,6 +12,20 @@ services:
       - mongo-data:/data/db
     networks:
       - my_custom_network
+  api:
+      container_name: fcg-payments-api
+      build:
+        context: .
+        dockerfile: ./FCG.Payments/FCG.Payments.API/Dockerfile
+      restart: always
+      ports:
+        - "5001:8080"
+      environment:
+        MongoDbSettings__ConnectionString: mongodb://admin:admin123@mongo:27017  
+        MongoDbSettings__DatabaseName: FCGPaymentsDb
+        ASPNETCORE_ENVIRONMENT: Development
+      depends_on:
+        - mongo
 networks:
   my_custom_network:
     external: false

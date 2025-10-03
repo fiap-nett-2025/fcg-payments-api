@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FCG.Payments.Domain.Entities;
 
 namespace FCG.Payments.Application.Services.Interfaces
 {
     public interface IPaymentGatewayService
     {
-        Task<bool> SendPaymentRequest();
+        Task<bool> SendPaymentRequest(User user, Guid orderId);
     }
 }

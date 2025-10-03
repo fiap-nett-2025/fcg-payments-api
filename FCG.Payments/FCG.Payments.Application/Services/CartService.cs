@@ -17,19 +17,19 @@ namespace FCG.Payments.Application.Services
         IGameService gameService
     ) : ICartService
     {
-        public async Task<CartDto> GetCartAsync(Guid userId)
+        public async Task<CartDto> GetCartAsync(User user)
         {
-            logger.LogDebug("Retrieving cart for user {UserId}", userId);
-            var cart = await cartRepository.GetByUserIdAsync(userId);
+            logger.LogDebug("Retrieving cart for user {UserId}", user.Id);
+            var cart = await cartRepository.GetByUserIdAsync(user.Id);
 
             if (cart is null)
             {
-                cart = new Cart(userId);
+                cart = new Cart(user.Id);
                 var taskInsert = cartRepository.AddAsync(cart);
                 var taskEvent = eventStore.SaveAsync(new CartCreatedEvent
                 {
                     CartId = cart.Id,
-                    UserId = userId
+                    UserId = user.Id
                 });
 
                 await Task.WhenAll(taskInsert, taskEvent);
@@ -38,15 +38,15 @@ namespace FCG.Payments.Application.Services
             return CartDto.ToDto(cart);
         }
 
-        public async Task<Cart> AddItemAsync(Guid userId, Guid gameId, int quantity)
+        public async Task<Cart> AddItemAsync(User user, Guid gameId, int quantity)
         {
             if (quantity <= 0)
                 throw new InvalidOperationException("Invalid quantity");
 
-            var cart = await cartRepository.GetByUserIdAsync(userId)
-                       ?? new Cart(userId);
+            var cart = await cartRepository.GetByUserIdAsync(user.Id)
+                       ?? new Cart(user.Id);
 
-            var game = await gameService.GetGameByIdAsync(gameId)
+            var game = await gameService.GetGameByIdAsync(user, gameId)
                 ?? throw new InvalidOperationException("Game not found");
 
             cart.AddItem(gameId, quantity, game.Price);
@@ -64,9 +64,9 @@ namespace FCG.Payments.Application.Services
             return cart;
         }
 
-        public async Task<Cart> RemoveItemAsync(Guid userId, Guid gameId)
+        public async Task<Cart> RemoveItemAsync(User user, Guid gameId)
         {
-            var cart = await cartRepository.GetByUserIdAsync(userId)
+            var cart = await cartRepository.GetByUserIdAsync(user.Id)
                        ?? throw new InvalidOperationException("Cart not found");
 
             cart.RemoveItem(gameId);
@@ -82,9 +82,9 @@ namespace FCG.Payments.Application.Services
             return cart;
         }
 
-        public async Task ClearCartAsync(Guid userId)
+        public async Task ClearCartAsync(User user)
         {
-            var cart = await cartRepository.GetByUserIdAsync(userId)
+            var cart = await cartRepository.GetByUserIdAsync(user.Id)
                        ?? throw new InvalidOperationException("Cart not found");
 
             cart.Clear();
@@ -97,23 +97,23 @@ namespace FCG.Payments.Application.Services
             });
         }
 
-        public async Task<OrderDto> CheckoutCartAsync(Guid userId)
+        public async Task<OrderDto> CheckoutCartAsync(User user)
         {
-            logger.LogDebug("Creating order from cart for user {UserId}", userId);
-            var cart = await cartRepository.GetByUserIdAsync(userId)
+            logger.LogDebug("Creating order from cart for user {UserId}", user.Id);
+            var cart = await cartRepository.GetByUserIdAsync(user.Id)
                        ?? throw new InvalidOperationException("Cart not found");
 
-            logger.LogDebug("Cart {CartId} from user {UserId} has {ItemCount} items", cart.Id, userId, cart.Items.Count);
+            logger.LogDebug("Cart {CartId} from user {UserId} has {ItemCount} items", cart.Id, user.Id, cart.Items.Count);
             if (cart.Items.Count == 0)
                 throw new InvalidOperationException("Cart is empty");
 
-            var order = new Order(userId, cart.Items);
+            var order = new Order(user.Id, cart.Items);
 
             var taskInsertOrder = orderRepository.AddAsync(order);
             var taskEvent = eventStore.SaveAsync(new OrderCreatedEvent
             {
                 OrderId = order.Id,
-                UserId = userId,
+                UserId = user.Id,
                 TotalPrice = order.Total
             });
 

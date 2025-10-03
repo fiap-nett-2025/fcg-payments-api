@@ -1,4 +1,4 @@
-﻿using FCG.Payments.Domain.Entities;
+﻿using FCG.Payments.Domain.Events;
 
 namespace FCG.Payments.Infra.Data.Repository.Interfaces
 {

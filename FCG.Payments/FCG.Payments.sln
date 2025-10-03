@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Domain", "4 - Domain", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{6780C07A-E522-4600-92A2-EE0111995C18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Domain.Tests", "FCG.Payments.Domain.Tests\FCG.Payments.Domain.Tests.csproj", "{D0E3DE43-C9EF-4C94-8B2D-69E414186494}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{76A0AC45-7DE9-40FB-B06E-42EDD4218052}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76A0AC45-7DE9-40FB-B06E-42EDD4218052}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76A0AC45-7DE9-40FB-B06E-42EDD4218052}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +58,7 @@ Global
 		{F9044C2C-31BC-4D06-A7B2-660434F2CF35} = {C060ED39-9E69-455A-ACAA-E45D3E9E02DD}
 		{E1810C56-023D-4986-B73A-98D17BFCCAF7} = {3CC1C5FE-A8F3-4B41-9E45-5711044E3544}
 		{76A0AC45-7DE9-40FB-B06E-42EDD4218052} = {BF2642F4-0293-4730-A7F0-7344D816BE92}
+		{D0E3DE43-C9EF-4C94-8B2D-69E414186494} = {6780C07A-E522-4600-92A2-EE0111995C18}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE1F7273-D347-4207-9272-72E5384E3F3F}

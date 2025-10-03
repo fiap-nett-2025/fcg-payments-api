@@ -1,5 +1,4 @@
-﻿using FCG.Payments.Domain.Entities;
-using FCG.Payments.Domain.Enums;
+﻿using FCG.Payments.Domain.Enums;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace FCG.Payments.Domain.Events.Order

@@ -6,10 +6,10 @@ namespace FCG.Payments.Application.Services.Interfaces
 {
     public interface ICartService
     {
-        Task<CartDto> GetCartAsync(Guid userId);
-        Task<Cart> AddItemAsync(Guid userId, Guid gameId, int quantity);
-        Task<Cart> RemoveItemAsync(Guid userId, Guid gameId);
-        Task ClearCartAsync(Guid userId);
-        Task<OrderDto> CheckoutCartAsync(Guid userId);
+        Task<CartDto> GetCartAsync(User user);
+        Task<Cart> AddItemAsync(User user, Guid gameId, int quantity);
+        Task<Cart> RemoveItemAsync(User user, Guid gameId);
+        Task ClearCartAsync(User user);
+        Task<OrderDto> CheckoutCartAsync(User user);
     }
 }

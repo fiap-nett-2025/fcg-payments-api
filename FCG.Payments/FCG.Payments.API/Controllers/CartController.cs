@@ -13,8 +13,8 @@ namespace FCG.Payments.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCart()
         {
-            var userId = GetUserId();
-            var cart = await cartService.GetCartAsync(userId);
+            var user = GetUserFromRequest();
+            var cart = await cartService.GetCartAsync(user);
 
             return Success(cart, "Carrinho encontrado/criado com sucesso.");
         }
@@ -22,32 +22,32 @@ namespace FCG.Payments.API.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> AddItem([FromBody] AddCartItemDto dto)
         {
-            var userId = GetUserId();
-            var cart = await cartService.AddItemAsync(userId, dto.GameId, dto.Quantity);
+            var user = GetUserFromRequest();
+            var cart = await cartService.AddItemAsync(user, dto.GameId, dto.Quantity);
             return CreatedResponse(cart, "Item adicionado com sucesso.");
         }
 
         [HttpDelete("remove/{gameId}")]
         public async Task<IActionResult> RemoveItem(Guid gameId)
         {
-            var userId = GetUserId();
-            var cart = await cartService.RemoveItemAsync(userId, gameId);
+            var user = GetUserFromRequest();
+            var cart = await cartService.RemoveItemAsync(user, gameId);
             return Success(cart, "Item removido com sucesso.");
         }
 
         [HttpDelete("clear")]
         public async Task<IActionResult> ClearCart()
         {
-            var userId = GetUserId();
-            await cartService.ClearCartAsync(userId);
+            var user = GetUserFromRequest();
+            await cartService.ClearCartAsync(user);
             return NoContent();
         }
 
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout()
         {
-            var userId = GetUserId();
-            var order = await cartService.CheckoutCartAsync(userId);
+            var user = GetUserFromRequest();
+            var order = await cartService.CheckoutCartAsync(user);
             return Success(order, "Ordem de pagamento criada com sucesso.");
         }
     }

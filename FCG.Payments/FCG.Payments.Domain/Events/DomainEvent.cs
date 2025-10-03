@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace FCG.Payments.Domain.Entities
+namespace FCG.Payments.Domain.Events
 {
     public abstract class DomainEvent
     {

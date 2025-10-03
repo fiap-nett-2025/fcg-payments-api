@@ -1,4 +1,5 @@
 ﻿using FCG.Payments.API.Wrappers;
+using FCG.Payments.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -37,11 +38,22 @@ namespace FCG.Payments.API.Controllers
             return StatusCode(400, response);
         }
 
-        protected Guid GetUserId()
+        private string GetJwtToken()
+        {
+            var authHeader = HttpContext.Request.Headers.Authorization.ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                throw new UnauthorizedAccessException("Token JWT não encontrado");
+
+            return authHeader.Replace("Bearer ", "");
+        }
+
+        protected User GetUserFromRequest()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? throw new UnauthorizedAccessException("Usuário não autenticado");
-            return Guid.Parse(userId);
+            string token = GetJwtToken();
+
+            return new User(userId, token);
         }
     }
 }

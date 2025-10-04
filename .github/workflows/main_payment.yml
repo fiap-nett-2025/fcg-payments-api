@@ -32,7 +32,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
 
       - name: Domain Tests
-        run: dotnet test ./FCG.Payments.Domain.Tests/FCG.Payments.Domain.Tests.csproj --configuration Release --no-build --verbosity normal
+        run: dotnet test ./FCG.Payments/FCG.Payments.Domain.Tests/FCG.Payments.Domain.Tests.csproj --configuration Release --no-build --verbosity normal
   
   build-and-deploy:
     name: Deploy to Production

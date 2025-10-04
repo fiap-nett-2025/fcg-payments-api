@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 env:
-  AZURE_CONTAINER_REGISTRY: fcgpaymentapi
-  CONTAINER_APP_NAME: fcg-payment-api
+  AZURE_CONTAINER_REGISTRY: fcgPaymentsApi
+  CONTAINER_APP_NAME: fcg-payments-api
   RESOURCE_GROUP: fcgUserApi
 
 jobs:

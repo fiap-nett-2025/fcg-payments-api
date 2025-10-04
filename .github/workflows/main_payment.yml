@@ -62,8 +62,8 @@ jobs:
           registryUrl: fcgpaymentsapi.azurecr.io
           registryUsername: ${{ secrets.FCGPAYMENTSAPI_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.FCGPAYMENTSAPI_REGISTRY_PASSWORD }}
-          containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          resourceGroup: ${{ env.RESOURCE_GROUP }}}
+          containerAppName: fcg-payments-api
+          resourceGroup: fcgUserApi
           imageToBuild: fcgpaymentsapi.azurecr.io/fcg-payments-api:${{ github.sha }}
           _buildArgumentsKey_: |
             _buildArgumentsValues_

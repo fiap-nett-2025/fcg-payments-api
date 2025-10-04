@@ -59,11 +59,11 @@ jobs:
           appSourcePath: ${{ github.workspace }}
           _dockerfilePathKey_: _dockerfilePath_
           _targetLabelKey_: _targetLabel_
-          registryUrl: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io
+          registryUrl: fcgpaymentsapi.azurecr.io
           registryUsername: ${{ secrets.FCGPAYMENTSAPI_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.FCGPAYMENTSAPI_REGISTRY_PASSWORD }}
           containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          resourceGroup: ${{ env.RESOURCE_GROUP }}
-          imageToBuild: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_APP_NAME }}:${{ github.sha }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}}
+          imageToBuild: fcgpaymentsapi.azurecr.io/fcg-payments-api:${{ github.sha }}
           _buildArgumentsKey_: |
             _buildArgumentsValues_

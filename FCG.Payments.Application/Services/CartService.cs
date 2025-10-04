@@ -38,18 +38,15 @@ namespace FCG.Payments.Application.Services
             return CartDto.ToDto(cart);
         }
 
-        public async Task<Cart> AddItemAsync(User user, Guid gameId, int quantity)
+        public async Task<Cart> AddItemAsync(User user, string gameId)
         {
-            if (quantity <= 0)
-                throw new InvalidOperationException("Invalid quantity");
-
             var cart = await cartRepository.GetByUserIdAsync(user.Id)
                        ?? new Cart(user.Id);
 
             var game = await gameService.GetGameByIdAsync(user, gameId)
                 ?? throw new InvalidOperationException("Game not found");
 
-            cart.AddItem(gameId, quantity, game.Price);
+            cart.AddItem(gameId, game.Price);
 
             await cartRepository.UpdateAsync(cart);
 
@@ -57,17 +54,19 @@ namespace FCG.Payments.Application.Services
             {
                 CartId = cart.Id,
                 GameId = gameId,
-                Quantity = quantity,
                 UnitPrice = game.Price
             });
 
             return cart;
         }
 
-        public async Task<Cart> RemoveItemAsync(User user, Guid gameId)
+        public async Task<Cart> RemoveItemAsync(User user, string gameId)
         {
             var cart = await cartRepository.GetByUserIdAsync(user.Id)
                        ?? throw new InvalidOperationException("Cart not found");
+
+           if(cart.Items.Exists(i => i.GameId == gameId) == false)
+                throw new InvalidOperationException("Item not found in cart");
 
             cart.RemoveItem(gameId);
 

@@ -1,4 +1,5 @@
 ﻿using FCG.Payments.Application.DTO;
+using FCG.Payments.Application.DTO.Game;
 using FCG.Payments.Application.Services.Interfaces;
 using FCG.Payments.Domain.Entities;
 using Newtonsoft.Json;
@@ -7,9 +8,10 @@ using System.Net.Http.Json;
 
 namespace FCG.Payments.Application.Services
 {
+
     public class GameService(IHttpClientFactory httpClientFactory) : IGameService
     {
-        public async Task<GameDto?> GetGameByIdAsync(User user, Guid gameId)
+        public async Task<GameDto?> GetGameByIdAsync(User user, string gameId)
         {
             var client = httpClientFactory.CreateClient("GamesApi");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
@@ -18,10 +20,11 @@ namespace FCG.Payments.Application.Services
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<GameDto>();
+            var responseDto = await response.Content.ReadFromJsonAsync<ApiResponse<GameDto>>();
+            return responseDto?.Data;
         }
 
-        public async Task IncreaseGamesPopularity(User user, params Guid[] gamesId)
+        public async Task IncreaseGamesPopularity(User user, params string[] gamesId)
         {
             var client = httpClientFactory.CreateClient("GamesApi");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);

@@ -23,12 +23,12 @@ namespace FCG.Payments.API.Controllers
         public async Task<IActionResult> AddItem([FromBody] AddCartItemDto dto)
         {
             var user = GetUserFromRequest();
-            var cart = await cartService.AddItemAsync(user, dto.GameId, dto.Quantity);
+            var cart = await cartService.AddItemAsync(user, dto.GameId);
             return CreatedResponse(cart, "Item adicionado com sucesso.");
         }
 
         [HttpDelete("remove/{gameId}")]
-        public async Task<IActionResult> RemoveItem(Guid gameId)
+        public async Task<IActionResult> RemoveItem(string gameId)
         {
             var user = GetUserFromRequest();
             var cart = await cartService.RemoveItemAsync(user, gameId);

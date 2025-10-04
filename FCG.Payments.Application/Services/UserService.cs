@@ -7,12 +7,12 @@ namespace FCG.Payments.Application.Services
 {
     public class UserService(ILogger<UserService> logger, IHttpClientFactory httpClientFactory) : IUserService
     {
-        public async Task AddGamesInLibraryAsync(User user, params Guid[] gamesId)
+        public async Task AddGamesInLibraryAsync(User user, params string[] gamesId)
         {
             var client = httpClientFactory.CreateClient("UsersApi");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
-            foreach (Guid gameId in gamesId)
+            foreach (string gameId in gamesId)
             {
                 try
                 {

@@ -6,9 +6,7 @@ namespace FCG.Payments.Domain.Events.Cart
     {
         [BsonRepresentation(MongoDB.Bson.BsonType.String)]
         public Guid CartId { get; set; }
-        [BsonRepresentation(MongoDB.Bson.BsonType.String)]
-        public Guid GameId { get; set; }
-        public int Quantity { get; set; }
+        public required string GameId { get; set; }
         public decimal UnitPrice { get; set; }
     }
 }

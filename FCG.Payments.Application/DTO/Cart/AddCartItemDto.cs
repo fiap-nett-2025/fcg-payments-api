@@ -2,7 +2,6 @@
 {
     public class AddCartItemDto
     {
-        public Guid GameId { get; set; }
-        public int Quantity { get; set; }
+        public required string GameId { get; set; }
     }
 }

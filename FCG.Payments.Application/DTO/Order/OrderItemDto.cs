@@ -2,7 +2,7 @@
 {
     public class OrderItemDto
     {
-        public Guid GameId { get; set; }
+        public required string GameId { get; set; }
         public decimal Price { get; set; }
     }
 }

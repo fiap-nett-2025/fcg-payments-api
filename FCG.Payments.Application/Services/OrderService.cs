@@ -37,7 +37,7 @@ namespace FCG.Payments.Application.Services
             if (order.IsPaid)
                 throw new InvalidOperationException("Order already paid");
 
-            var paymentSucceeded = await paymentGateway.SendPaymentRequest(user, orderId); 
+            (bool paymentSucceeded, string reason) = await paymentGateway.SendPaymentRequest(user, orderId);
 
             if (!paymentSucceeded)
             {
@@ -46,7 +46,7 @@ namespace FCG.Payments.Application.Services
                     UserId = user.Id,
                     OrderId = order.Id,
                     PaymentMethod = dto.Method,
-                    Reason = "Payment gateway declined"
+                    Reason = reason
                 });
 
                 return new PaymentResult()
@@ -64,10 +64,11 @@ namespace FCG.Payments.Application.Services
             var taskEvent = eventStore.SaveAsync(new OrderPaidEvent
             {
                 OrderId = order.Id,
-                PaymentMethod = dto.Method
+                UserId = user.Id,
+                PaymentMethod = dto.Method,
             });
 
-            await Task.WhenAll(taskLibrary, taskEvent);
+            await Task.WhenAll(taskPopularity, taskLibrary, taskEvent);
 
             return new PaymentResult()
             {

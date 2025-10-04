@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FCG.Payments.Application\FCG.Payments.Application.csproj" />
-    <ProjectReference Include="..\FCG.Payments.Data\FCG.Payments.Infra.Data.csproj" />
     <ProjectReference Include="..\FCG.Payments.Infra.Data\FCG.Payments.Infra.Data.csproj" />
   </ItemGroup>
 

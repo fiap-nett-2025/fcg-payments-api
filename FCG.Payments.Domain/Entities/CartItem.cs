@@ -2,14 +2,9 @@
 
 namespace FCG.Payments.Domain.Entities
 {
-    public class CartItem(Guid gameId, int quantity, decimal unitPrice)
+    public class CartItem(string gameId, decimal unitPrice)
     {
-        [BsonRepresentation(MongoDB.Bson.BsonType.String)]
-        public Guid GameId { get; private set; } = gameId;
-        public int Quantity { get; private set; } = quantity;
+        public string GameId { get; private set; } = gameId;
         public decimal UnitPrice { get; private set; } = unitPrice;
-        public decimal Subtotal => Quantity * UnitPrice;
-
-        public void IncreaseQuantity(int qty) => Quantity += qty;
     }
 }

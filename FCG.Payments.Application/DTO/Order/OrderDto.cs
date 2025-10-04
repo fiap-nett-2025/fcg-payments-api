@@ -6,7 +6,7 @@ namespace FCG.Payments.Application.DTO.Order
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
-        public OrderStatus Status { get; set; }
+        public required string Status { get; set; }
         public decimal Total { get; set; }
         public List<OrderItemDto> Items { get; set; } = [];
 
@@ -22,7 +22,7 @@ namespace FCG.Payments.Application.DTO.Order
                     Price = i.UnitPrice
 
                 }).ToList(),
-                Status = order.Status,
+                Status = order.Status.ToString(),
                 Total = order.Total,
             };
             return dto;

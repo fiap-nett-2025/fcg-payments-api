@@ -7,8 +7,8 @@ namespace FCG.Payments.Application.Services.Interfaces
     public interface ICartService
     {
         Task<CartDto> GetCartAsync(User user);
-        Task<Cart> AddItemAsync(User user, Guid gameId, int quantity);
-        Task<Cart> RemoveItemAsync(User user, Guid gameId);
+        Task<Cart> AddItemAsync(User user, string gameId);
+        Task<Cart> RemoveItemAsync(User user, string gameId);
         Task ClearCartAsync(User user);
         Task<OrderDto> CheckoutCartAsync(User user);
     }

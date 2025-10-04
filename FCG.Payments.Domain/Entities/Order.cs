@@ -22,13 +22,13 @@ namespace FCG.Payments.Domain.Entities
         {
             UserId = userId;
             foreach (var item in cartItems)
-                Items.Add(new OrderItem(item.GameId, item.Quantity, item.UnitPrice));
+                Items.Add(new OrderItem(item.GameId, item.UnitPrice));
             RecalculateTotal();
         }
 
         private void RecalculateTotal()
         {
-            Total = Items.Sum(i => i.Subtotal) - Discount;
+            Total = Items.Sum(i => i.UnitPrice) - Discount;
             if (Total < 0) Total = 0;
         }
 

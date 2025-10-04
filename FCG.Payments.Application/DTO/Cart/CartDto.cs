@@ -12,7 +12,6 @@
                 Items = [.. cart.Items.Select(i => new CartItemDto()
                 {
                     GameId = i.GameId,
-                    Quantity = i.Quantity,
                     UnitPrice = i.UnitPrice
                 })],
                 Total = cart.GetTotal()

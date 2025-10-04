@@ -2,9 +2,7 @@
 {
     public class CartItemDto
     {
-        public Guid GameId { get; set; }
-        public int Quantity { get; set; }
+        public required string GameId { get; set; }
         public decimal UnitPrice { get; set; }
-        public decimal TotalPrice { get => Quantity * UnitPrice; }
     }
 }

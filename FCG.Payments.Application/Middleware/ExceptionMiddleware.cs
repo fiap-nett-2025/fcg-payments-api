@@ -30,7 +30,6 @@ namespace FCG.Payments.Application.Middleware
 
             var statusCode = exception switch
             {
-                //BaseCustomException custom => custom.StatusCode,
                 ArgumentException or InvalidOperationException => (int)HttpStatusCode.BadRequest,
                 KeyNotFoundException => (int)HttpStatusCode.NotFound,
                 UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,

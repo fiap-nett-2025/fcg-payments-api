@@ -26,16 +26,16 @@ namespace FCG.Payments.Application.Services
         {
             logger.LogDebug("Processing payment for order {OrderId} by user {UserId}", orderId, user.Id);
             var order = await orderRepository.GetByIdAsync(orderId)
-                       ?? throw new InvalidOperationException("Order not found");
+                       ?? throw new InvalidOperationException("Ordem de pagamento não encontrada.");
 
             var gameIds = order.Items.Select(i => i.GameId).ToArray();
             logger.LogDebug("Order {OrderId} has {ItemCount} games: {GamesIds}", orderId, order.Items.Count, string.Join(", ", gameIds));
 
             if (order.UserId != user.Id)
-                throw new UnauthorizedAccessException("Not your order");
+                throw new UnauthorizedAccessException("Ordem de pagamento não encontrada.");
 
             if (order.IsPaid)
-                throw new InvalidOperationException("Order already paid");
+                throw new InvalidOperationException("Ordem de pagamento já está paga.");
 
             (bool paymentSucceeded, string reason) = await paymentGateway.SendPaymentRequest(user, orderId);
 
@@ -52,7 +52,7 @@ namespace FCG.Payments.Application.Services
                 return new PaymentResult()
                 {
                     Success = false,
-                    Message = "Payment failed"
+                    Message = "Pagamento falhou."
                 };
             }
 
@@ -73,7 +73,7 @@ namespace FCG.Payments.Application.Services
             return new PaymentResult()
             {
                 Success = true,
-                Message = "Payment successful"
+                Message = "Pagamento realizado com sucesso."
             };
         }
     }

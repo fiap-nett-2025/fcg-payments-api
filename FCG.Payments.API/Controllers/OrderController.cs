@@ -15,7 +15,7 @@ namespace FCG.Payments.API.Controllers
         {
             var order = await orderService.GetOrderAsync(orderId);
             if (order == null) return NotFound();
-            return Ok(order);
+            return Success(order);
         }
 
         [HttpPost("{orderId}/pay")]
@@ -23,8 +23,9 @@ namespace FCG.Payments.API.Controllers
         {
             var user = GetUserFromRequest();
             var result = await orderService.PayOrderAsync(user, orderId, dto);
-
-            return result.Success ? Ok(result) : BadRequest(result);
+            return result.Success
+                ? Success(result, result.Message)
+                : Fail(result?.Message ?? "Ordem de pagamento falhou.");
         }
     }
 }

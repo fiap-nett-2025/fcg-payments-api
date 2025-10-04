@@ -39,7 +39,9 @@ jobs:
     needs: test
     if: success()
     runs-on: ubuntu-latest
-    
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
     steps:
       - name: Checkout to the branch
         uses: actions/checkout@v2

@@ -1,4 +1,4 @@
-using FCG.Payments.API.Configurations;
+﻿using FCG.Payments.API.Configurations;
 using FCG.Payments.Application;
 using FCG.Payments.Application.Middleware;
 using FCG.Payments.Application.Services;
@@ -101,11 +101,17 @@ builder.Services.AddHttpClient("PaymentGateway", client =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+#region Pipeline
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Environment.IsProduction())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerConfiguration();
 }
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
+#endregion
 
 app.UseDeveloperExceptionPage();
 app.UseExceptionHandler("/Error");

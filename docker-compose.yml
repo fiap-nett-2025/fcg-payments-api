@@ -16,7 +16,7 @@ services:
       container_name: fcg-payments-api
       build:
         context: .
-        dockerfile: ./FCG.Payments/FCG.Payments.API/Dockerfile
+        dockerfile: ./FCG.Payments.API/Dockerfile
       restart: always
       ports:
         - "5001:8080"

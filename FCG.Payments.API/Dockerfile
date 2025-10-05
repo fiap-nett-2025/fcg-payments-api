@@ -13,7 +13,7 @@ CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} \
 CORECLR_NEWRELIC_HOME=/usr/local/newrelic-dotnet-agent \
 CORECLR_PROFILER_PATH=/usr/local/newrelic-dotnet-agent/libNewRelicProfiler.so \
 NEW_RELIC_LICENSE_KEY=49fea977ae8cb8915399b2c027e24687FFFFNRAL \
-NEW_RELIC_APP_NAME="fcg-payment-api"
+NEW_RELIC_APP_NAME="fcg-payments-api"
 
 # ✅ Troca para root para conseguir instalar pacotes
 USER root

@@ -44,7 +44,7 @@ namespace FCG.Payments.Application.Services
                 await eventStore.SaveAsync(new PaymentFailedEvent(order.Id)
                 {
                     UserId = user.Id,
-                    PaymentMethod = dto.Method,
+                    PaymentMethod = dto.Method.ToString(),
                     Reason = reason
                 });
 
@@ -63,7 +63,7 @@ namespace FCG.Payments.Application.Services
             var taskEvent = eventStore.SaveAsync(new OrderPaidEvent(order.Id)
             {
                 UserId = user.Id,
-                PaymentMethod = dto.Method,
+                PaymentMethod = dto.Method.ToString(),
             });
 
             await Task.WhenAll(taskPopularity, taskLibrary, taskEvent);

@@ -1,5 +1,4 @@
-﻿using FCG.Payments.Domain.Enums;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace FCG.Payments.Domain.Events.Order
 {
@@ -17,7 +16,7 @@ namespace FCG.Payments.Domain.Events.Order
         [BsonRepresentation(MongoDB.Bson.BsonType.String)]
         public Guid UserId { get; set; }
 
-        public PaymentMethod PaymentMethod { get; set; }
+        public string? PaymentMethod { get; set; }
 
         public required string Reason { get; set; }
     }

@@ -8,7 +8,10 @@ using FCG.Payments.Infra.Data.Repository;
 using FCG.Payments.Infra.Data.Repository.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
 using System.Text;
+
+ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls13;
 
 var builder = WebApplication.CreateBuilder(args);
 

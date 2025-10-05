@@ -9,5 +9,14 @@ namespace FCG.Payments.Domain.Events
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime OccurredAt { get; set; } = DateTime.UtcNow;
         public string EventType => GetType().Name;
+
+        public string AggregateId { get; private set; } = null!;
+        public string AggregateType { get; private set; } = null!;
+
+        public void SetupAggregate<T>(string id)
+        {
+            AggregateId = id;
+            AggregateType = typeof(T).Name;
+        }
     }
 }

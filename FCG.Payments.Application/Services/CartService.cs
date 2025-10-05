@@ -26,9 +26,8 @@ namespace FCG.Payments.Application.Services
             {
                 cart = new Cart(user.Id);
                 var taskInsert = cartRepository.AddAsync(cart);
-                var taskEvent = eventStore.SaveAsync(new CartCreatedEvent
+                var taskEvent = eventStore.SaveAsync(new CartCreatedEvent(cart.Id)
                 {
-                    CartId = cart.Id,
                     UserId = user.Id
                 });
 
@@ -50,10 +49,10 @@ namespace FCG.Payments.Application.Services
 
             await cartRepository.UpdateAsync(cart);
 
-            await eventStore.SaveAsync(new CartItemAddedEvent
+            await eventStore.SaveAsync(new CartItemAddedEvent(cart.Id)
             {
-                CartId = cart.Id,
                 GameId = gameId,
+                UserId = user.Id,
                 UnitPrice = game.Price
             });
 
@@ -72,10 +71,10 @@ namespace FCG.Payments.Application.Services
 
             await cartRepository.UpdateAsync(cart);
 
-            await eventStore.SaveAsync(new CartItemRemovedEvent
+            await eventStore.SaveAsync(new CartItemRemovedEvent(cart.Id)
             {
-                CartId = cart.Id,
-                GameId = gameId
+                GameId = gameId,
+                UserId = user.Id
             });
 
             return cart;
@@ -90,9 +89,9 @@ namespace FCG.Payments.Application.Services
 
             await cartRepository.UpdateAsync(cart);
 
-            await eventStore.SaveAsync(new CartClearedEvent
+            await eventStore.SaveAsync(new CartClearedEvent(cart.Id)
             {
-                CartId = cart.Id
+                UserId = user.Id
             });
         }
 
@@ -109,9 +108,8 @@ namespace FCG.Payments.Application.Services
             var order = new Order(user.Id, cart.Items);
 
             var taskInsertOrder = orderRepository.AddAsync(order);
-            var taskEvent = eventStore.SaveAsync(new OrderCreatedEvent
+            var taskEvent = eventStore.SaveAsync(new OrderCreatedEvent(order.Id)
             {
-                OrderId = order.Id,
                 UserId = user.Id,
                 TotalPrice = order.Total
             });

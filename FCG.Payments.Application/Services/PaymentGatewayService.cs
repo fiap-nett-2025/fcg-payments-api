@@ -25,8 +25,6 @@ namespace FCG.Payments.Application.Services
                 var response = await client.PostAsync("api/Payment", httpContent);
                 response.EnsureSuccessStatusCode();
 
-                var teste = await response.Content.ReadAsStringAsync();
-
                 var responseDto = await response.Content.ReadFromJsonAsync<PaymentGatewayResponseDto>();
 
                 if (responseDto == null)

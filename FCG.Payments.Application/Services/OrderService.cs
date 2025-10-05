@@ -41,11 +41,10 @@ namespace FCG.Payments.Application.Services
 
             if (!paymentSucceeded)
             {
-                await eventStore.SaveAsync(new PaymentFailedEvent
+                await eventStore.SaveAsync(new PaymentFailedEvent(order.Id)
                 {
                     UserId = user.Id,
-                    OrderId = order.Id,
-                    PaymentMethod = dto.Method,
+                    PaymentMethod = dto.Method.ToString(),
                     Reason = reason
                 });
 
@@ -61,11 +60,10 @@ namespace FCG.Payments.Application.Services
 
             var taskPopularity = gameService.IncreaseGamesPopularity(user, gameIds);
             var taskLibrary = userService.AddGamesInLibraryAsync(user, gameIds);
-            var taskEvent = eventStore.SaveAsync(new OrderPaidEvent
+            var taskEvent = eventStore.SaveAsync(new OrderPaidEvent(order.Id)
             {
-                OrderId = order.Id,
                 UserId = user.Id,
-                PaymentMethod = dto.Method,
+                PaymentMethod = dto.Method.ToString(),
             });
 
             await Task.WhenAll(taskPopularity, taskLibrary, taskEvent);

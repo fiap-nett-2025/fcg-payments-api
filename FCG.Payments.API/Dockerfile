@@ -7,7 +7,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER root
 
 RUN apt-get update && \
-    apt-get install -y wget ca-certificates gnupg && \
+    apt-get install -y wget gnupg ca-certificates openssl && \
+    update-ca-certificates && \
     mkdir -p /usr/share/keyrings && \
     wget -O- https://download.newrelic.com/548C16BF.gpg | gpg --dearmor -o /usr/share/keyrings/newrelic-archive-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/newrelic-archive-keyring.gpg] http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list && \

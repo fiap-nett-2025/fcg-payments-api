@@ -49,7 +49,7 @@ namespace FCG.Payments.API.Configurations
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FCG API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FCG Payments API V1");
                 c.RoutePrefix = string.Empty;
             });
         }

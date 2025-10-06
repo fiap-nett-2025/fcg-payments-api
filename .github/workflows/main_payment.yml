@@ -57,7 +57,7 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           appSourcePath: ${{ github.workspace }}
-          _dockerfilePathKey_: _dockerfilePath_
+          _dockerfilePathKey_: FCG.Payments.API/Dockerfile
           _targetLabelKey_: _targetLabel_
           registryUrl: fcgpaymentsapi.azurecr.io
           registryUsername: ${{ secrets.FCGPAYMENTSAPI_REGISTRY_USERNAME }}

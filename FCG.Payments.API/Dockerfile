@@ -10,6 +10,14 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
+# Enable the agent
+ENV CORECLR_ENABLE_PROFILING=1 \
+    CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} \
+    CORECLR_NEWRELIC_HOME=/usr/local/newrelic-dotnet-agent \
+    CORECLR_PROFILER_PATH=/usr/local/newrelic-dotnet-agent/libNewRelicProfiler.so \
+    NEW_RELIC_LICENSE_KEY=49fea977ae8cb8915399b2c027e24687FFFFNRAL \
+    NEW_RELIC_APP_NAME="fcg-payments-api"
+
 # Instala New Relic
 RUN apt-get update && \
     apt-get install -y wget ca-certificates gnupg && \
@@ -23,14 +31,6 @@ RUN apt-get update && \
 # ✅ Ajusta permissões para o usuário não-root conseguir acessar
 RUN chmod -R 755 /usr/local/newrelic-dotnet-agent && \
     chown -R $APP_UID:$APP_UID /usr/local/newrelic-dotnet-agent
-
-# Enable the agent
-ENV CORECLR_ENABLE_PROFILING=1 \
-    CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A} \
-    CORECLR_NEWRELIC_HOME=/usr/local/newrelic-dotnet-agent \
-    CORECLR_PROFILER_PATH=/usr/local/newrelic-dotnet-agent/libNewRelicProfiler.so \
-    NEW_RELIC_LICENSE_KEY=49fea977ae8cb8915399b2c027e24687FFFFNRAL \
-    NEW_RELIC_APP_NAME="fcg-payments-api"
 
 # ✅ Volta para o usuário não-root antes de continuar
 USER $APP_UID

@@ -1,111 +1,62 @@
-# FCG Payments API
+# 🎮 FIAP Cloud Games (FCG) - Payment Service
 
-API de simulação de pagamentos para o projeto **FCG (Fiap Challenge Games)** — oferece endpoint para requisições de pagamento que retorna status aleatório com distribuição probabilística, e mapeamento de usuário via JWT.
+## 📚 Sobre o Projeto
 
----
+Microsserviço API de simulação de pagamentos para o projeto **FCG (Fiap Cloud Games)** — oferece endpoint para requisições de pagamento que retorna status aleatório com distribuição probabilística, e mapeamento de usuário via JWT.
+Desenvolvida dentro do ecossistema educacional da FIAP (Faclidade de Informática e Administração Palista). 
 
-## 🧾 Tabela de conteúdo
+[Documentação](https://www.notion.so/Fiap-Cloud-Games-FCG-1dea50ade75480e78653c05e2cca2193?pvs=4)
 
-- Visão geral  
-- Funcionalidades  
-- Tech stack  
-- Pré-requisitos  
-- Instalação / execução local  
-- Endpoints disponíveis  
-- Exemplo de uso  
-- Integração com Docker / Mongo  
-- Enumeração de status de pagamento  
-- Considerações / melhorias futuras  
-- Licença  
+## :money_with_wings:  Sobre o Serviço de Pagamentos
 
----
+O serviço de pagamentos é responsável por gerenciar o carrinho e os pedidos no nosso projeto FCG. Ele oferece funcionalidades para adcionar e remover itens do carrinho(cart), listar carrinhos e fazer o checkout. Além disso, também tem endpoints de pedido(order) como para mostrar um pedido e e realizar pagamento.
 
-## 📌 Visão geral
+:space_invader: Essa API foi feita com Event Sourcing, registrando os eventos no nosso banco MongoDB. 
+<img height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" />
 
-Essa API serve como **serviço de pagamento simulado** para integração com sistemas de pedidos.  
-A lógica principal:
+A lógica de <B>Pagamento</b> dessa API é:
+- O usuário se autentifica com seu token JWT, o programa extrai o UserId do token JWT enviado no cabeçalho `Authorization`;
+- Usuário executa o método "api/Order/{orderId}/pay";
+- A <b>Azure function</b> é chamada e ela gera um status de pagamento com **70% de chance de sucesso** e **30% de chance de falha**, com variações de tipo de falha;  
+- Retorna para o usuário o resultado como JSON, contendo `UserId`, `PaymentStatus` e `Timestamp`.
 
-- Recebe requisição HTTP POST para processar um pagamento.  
-- Extrai o **UserId** do token JWT enviado no cabeçalho `Authorization`.  
-- Gera um status de pagamento com **70% de chance de sucesso** e **30% de chance de falha**, com variações de tipo de falha.  
-- Retorna o resultado como JSON, contendo `UserId`, `PaymentStatus` e `Timestamp`.
+### :computer: Comunicação com a API de Usuarios e com a API de Jogos
 
-É útil para testar fluxos de pedido/pagamento sem depender de gateway real.
+Para usar a API de Pagamentos é necessário <b>fazer autenticação via token JWT obtido pelo metodo de login da api de Usuários</b>. A API de Pagamentos se comunica com o API de Jogos para pegar o `GameId` que será adcionado ao carrinho. 
 
----
+Além disso, depois que o pagamento com a Azure Function é processado se ele for bem sucedido, essa API irá acessar a API de Usuários para cadastrar os novos jogos adquiridos na biblioteca de jogos do usuário e também irá aumentar a popularidade dos jogos comprados, acessando a API de Jogos novamente.
 
-## ✅ Funcionalidades
+## ⚙️ Tecnologias e Plataformas utilizadas
 
-- Autenticação via token JWT (extrai `NameIdentifier` ou `sub`).  
-- Simulação de pagamento com distribuição probabilística.  
-- Vários tipos de falhas (ex: insuficient funds, timeout, cartão inválido).  
-- Projeto estruturado para poder evoluir (suporte a Event Sourcing, integração com repositórios, logs).  
+- [.NET 8](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Visual Studio](https://visualstudio.microsoft.com/pt-br/)
+- [EF Core](https://learn.microsoft.com/pt-br/ef/core/)
+- [ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/)
+- [XUnit](https://xunit.net/)
+- [Swagger](https://swagger.io/)
+- [Docker](https://www.docker.com/)
+- [MongoDB](https://www.mongodb.com/)
 
----
+## 🛠️ Como Executar
 
-## 🛠 Tech stack
+### Usando Docker
 
-- .NET / C# — Lógica da API  
-- JWT / Claims — Autenticação e identificação de usuário  
-- Random — Simulação do status de pagamento  
-- Docker + MongoDB (opcional) — Persistência / ambiente local de testes  
+1. Certifique-se de ter o [Docker](https://www.docker.com/get-started/) instalado em sua máquina.
+2. No terminal, navegue até a raiz do projeto.
+3. Execute o comando abaixo para construir e iniciar os containers:
 
----
+```bash
+docker-compose up -d --build
+```
 
-## 📋 Pré-requisitos
+## 🤝 Contribuição
 
-- .NET SDK (versão compatível com o projeto)  
-- (Opcional) Docker & Docker Compose  
-- (Se estiver persistindo algo) MongoDB acessível  
-
----
-
-## ▶️ Instalação / execução local
-
-1. Clone o repositório:
-
-   ```bash
-   git clone https://github.com/fiap-nett-2025/fcg-payments-api.git
-   cd fcg-payments-api
-   ```
-
-2. (Opcional) Se houver **Docker Compose** incluído, suba os containers:
-
-   ```bash
-   docker compose up -d
-   ```
-
-3. Compile e execute localmente o projeto:
-
-   ```bash
-   dotnet build
-   dotnet run --project FCG.Payments.API
-   ```
-
----
-
-## 🐳 Integração com Docker / Mongo
-
-Se você usa MongoDB para persistência (por exemplo, Event Store ou logs de pagamento):
-
-1. Inclua no `docker-compose.yml` um serviço Mongo.  
-2. Configure o `ConnectionString` no `appsettings.json`.  
-3. Configure `IMongoDatabase`, `IMongoClient` e repositórios via injeção de dependência.  
-4. Eventualmente, você pode gravar os eventos de pagamento no Mongo como histórico.  
-
----
-
-## 🔧 Melhorias futuras / Considerações
-
-- Validação e verificação do token JWT (validar assinatura, issuer, claims esperadas).  
-- Taxas, moedas, métodos reais de pagamento integrados.  
-- Recurso de repetição/retentativa em falhas “timeout / redes”.  
-- Auditoria / log persistido (salvar cada requisição resposta em banco).  
-- Suporte a vários ambientes (desenvolvimento, homolog, produção).  
-- Documentação Swagger / OpenAPI para testar o endpoint interativamente.  
-
----
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
 
 ## 📄 Licença
 
-Este projeto está sob a licença **MIT** — veja o arquivo `LICENSE` para mais detalhes.
+Este projeto está licenciado sob a licença MIT.
+
+---
+
+Feito com ❤️!

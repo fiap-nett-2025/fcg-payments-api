@@ -70,12 +70,23 @@ builder.Services.ConfigureMongoDb();
 #endregion
 
 #region RabbitMq
-var rabbitSection = builder.Configuration.GetSection("RabbitMqSettings");
+var rabbitSection = builder.Configuration.GetSection("RabbitMq");
 
-if (!rabbitSection.Exists())
+var rabbitSettingsSection = rabbitSection.GetSection("Settings");
+if (!rabbitSettingsSection.Exists())
     throw new InvalidOperationException("Section 'RabbitMqSettings' not found in configuration.");
+builder.Services.Configure<RabbitMqOptions>(rabbitSettingsSection);
 
-builder.Services.Configure<RabbitMqOptions>(rabbitSection);
+var exchangesSection = rabbitSection.GetSection("Exchanges");
+if (!exchangesSection.Exists())
+    throw new InvalidOperationException("Section 'Exchanges' not found in configuration.");
+builder.Services.Configure<ExchangesOptions>(exchangesSection);
+
+var queuesSection = rabbitSection.GetSection("Queues");
+if (!queuesSection.Exists())
+    throw new InvalidOperationException("Section 'Queues' not found in configuration.");
+builder.Services.Configure<QueuesOptions>(queuesSection);
+
 builder.Services.ConfigureRabbitMq();
 #endregion
 

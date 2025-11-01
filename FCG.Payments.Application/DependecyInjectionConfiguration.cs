@@ -1,4 +1,6 @@
-﻿using FCG.Payments.Application.Services;
+﻿using FCG.Payments.Application.Publishers;
+using FCG.Payments.Application.Publishers.Interfaces;
+using FCG.Payments.Application.Services;
 using FCG.Payments.Application.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,11 @@ namespace FCG.Payments.Application
     {
         public static void ConfigureServices(this IServiceCollection services)
         {
+            // Publishers
+            services.AddTransient<IGameServicePublisher, GameServicePublisher>();
+            services.AddTransient<IUserServicePublisher, UserServicePublisher>();
+
+            // Services
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IGameService, GameService>();

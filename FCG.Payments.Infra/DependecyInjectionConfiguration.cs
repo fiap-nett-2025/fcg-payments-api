@@ -7,7 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using RabbitMQ.Client;
-using Microsoft.Extensions.Configuration;
+using FCG.Payments.Infra.Messaging;
+using FCG.Payments.Domain.Messaging.Interfaces;
 
 namespace FCG.Payments.Infra
 {
@@ -58,6 +59,9 @@ namespace FCG.Payments.Infra
 
                 return factory;
             });
+
+            services.AddTransient<IQueuePublisher, RabbitMqPublisher>();
+            services.AddTransient<IQueueConsumer, RabbitMqConsumer>();
         }
 
         public static void ConfigurePersistence(this IServiceCollection services)

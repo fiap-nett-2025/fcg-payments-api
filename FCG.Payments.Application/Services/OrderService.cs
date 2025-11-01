@@ -58,15 +58,16 @@ namespace FCG.Payments.Application.Services
             order.MarkAsPaid();
             await orderRepository.UpdateAsync(order);
 
-            var taskPopularity = gameService.IncreaseGamesPopularity(user, gameIds);
-            var taskLibrary = userService.AddGamesInLibraryAsync(user, gameIds);
-            var taskEvent = eventStore.SaveAsync(new OrderPaidEvent(order.Id)
-            {
-                UserId = user.Id,
-                PaymentMethod = dto.Method.ToString(),
-            });
+            gameService.IncreaseGamesPopularity(user, gameIds).Wait();
+            //var taskPopularity = gameService.IncreaseGamesPopularity(user, gameIds);
+            //var taskLibrary = userService.AddGamesInLibraryAsync(user, gameIds);
+            //var taskEvent = eventStore.SaveAsync(new OrderPaidEvent(order.Id)
+            //{
+            //    UserId = user.Id,
+            //    PaymentMethod = dto.Method.ToString(),
+            //});
 
-            await Task.WhenAll(taskPopularity, taskLibrary, taskEvent);
+            //await Task.WhenAll(taskPopularity, taskLibrary, taskEvent);
 
             return new PaymentResult()
             {

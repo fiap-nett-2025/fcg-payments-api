@@ -1,6 +1,6 @@
 ﻿using FCG.Payments.Domain.Events;
 
-namespace FCG.Payments.Infra.Data.Repository.Interfaces
+namespace FCG.Payments.Infra.Persistence.Repository.Interfaces
 {
     public interface IEventStore
     {

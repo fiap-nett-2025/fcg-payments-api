@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Domain", "FCG.Payments.Domain\FCG.Payments.Domain.csproj", "{E1810C56-023D-4986-B73A-98D17BFCCAF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Infra.Data", "FCG.Payments.Infra.Data\FCG.Payments.Infra.Data.csproj", "{76A0AC45-7DE9-40FB-B06E-42EDD4218052}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Infra", "FCG.Payments.Infra\FCG.Payments.Infra.csproj", "{76A0AC45-7DE9-40FB-B06E-42EDD4218052}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - API", "1 - API", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Application", "2 - Application", "{C060ED39-9E69-455A-ACAA-E45D3E9E02DD}"
 EndProject

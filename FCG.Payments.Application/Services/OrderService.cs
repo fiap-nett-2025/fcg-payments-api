@@ -2,7 +2,7 @@
 using FCG.Payments.Application.Services.Interfaces;
 using FCG.Payments.Domain.Entities;
 using FCG.Payments.Domain.Events.Order;
-using FCG.Payments.Infra.Data.Repository.Interfaces;
+using FCG.Payments.Infra.Persistence.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace FCG.Payments.Application.Services

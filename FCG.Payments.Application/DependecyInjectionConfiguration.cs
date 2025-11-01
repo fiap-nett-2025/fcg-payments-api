@@ -1,0 +1,37 @@
+﻿using FCG.Payments.Application.Services;
+using FCG.Payments.Application.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace FCG.Payments.Application
+{
+    public static class DependecyInjectionConfiguration
+    {
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<ICartService, CartService>();
+            services.AddTransient<IGameService, GameService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IPaymentGatewayService, PaymentGatewayService>();
+        }
+
+        public static void ConfigureHttpClients(this IServiceCollection services, IConfigurationSection apiSection)
+        {
+            services.AddHttpClient("GamesApi", client =>
+            {
+                client.BaseAddress = new Uri(apiSection["GamesApiBaseUrl"] ?? "");
+            });
+
+            services.AddHttpClient("UsersApi", client =>
+            {
+                client.BaseAddress = new Uri(apiSection["UsersApiBaseUrl"] ?? "");
+            });
+
+            services.AddHttpClient("PaymentGateway", client =>
+            {
+                client.BaseAddress = new Uri(apiSection["PaymentGatewayBaseUrl"] ?? "");
+            });
+        }
+    }
+}

@@ -1,11 +1,9 @@
 ﻿using FCG.Payments.API.Configurations;
 using FCG.Payments.Application;
 using FCG.Payments.Application.Middleware;
-using FCG.Payments.Application.Services;
-using FCG.Payments.Application.Services.Interfaces;
-using FCG.Payments.Infra.Data;
-using FCG.Payments.Infra.Data.Repository;
-using FCG.Payments.Infra.Data.Repository.Interfaces;
+using FCG.Payments.Infra;
+using FCG.Payments.Infra.Messaging.Config;
+using FCG.Payments.Infra.Persistence.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
@@ -59,6 +57,8 @@ builder.Services.AddAuthorization(options =>
 });
 #endregion
 
+#region Dependency Injection
+
 #region MongoDB
 var mongoSection = builder.Configuration.GetSection("MongoDbSettings");
 
@@ -69,16 +69,14 @@ builder.Services.Configure<MongoDbOptions>(mongoSection);
 builder.Services.ConfigureMongoDb();
 #endregion
 
-#region Dependency Injection
-builder.Services.AddTransient<IEventStore, MongoEventStore>();
-builder.Services.AddTransient<ICartRepository, CartRepository>();
-builder.Services.AddTransient<IOrderRepository, OrderRepository>();
+#region RabbitMq
+var rabbitSection = builder.Configuration.GetSection("RabbitMqSettings");
 
-builder.Services.AddTransient<IOrderService, OrderService>();
-builder.Services.AddTransient<ICartService, CartService>();
-builder.Services.AddTransient<IGameService, GameService>();
-builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IPaymentGatewayService, PaymentGatewayService>();
+if (!rabbitSection.Exists())
+    throw new InvalidOperationException("Section 'RabbitMqSettings' not found in configuration.");
+
+builder.Services.Configure<RabbitMqOptions>(rabbitSection);
+builder.Services.ConfigureRabbitMq();
 #endregion
 
 #region API clients
@@ -86,20 +84,11 @@ var apiSection = builder.Configuration.GetSection("API");
 if (!apiSection.Exists())
     throw new InvalidOperationException("Section 'API' not found in configuration.");
 
-builder.Services.AddHttpClient("GamesApi", client =>
-{
-    client.BaseAddress = new Uri(apiSection["GamesApiBaseUrl"] ?? "");
-});
+builder.Services.ConfigureHttpClients(apiSection);
+#endregion
 
-builder.Services.AddHttpClient("UsersApi", client =>
-{
-    client.BaseAddress = new Uri(apiSection["UsersApiBaseUrl"] ?? "");
-});
-
-builder.Services.AddHttpClient("PaymentGateway", client =>
-{
-    client.BaseAddress = new Uri(apiSection["PaymentGatewayBaseUrl"] ?? "");
-});
+builder.Services.ConfigurePersistence();
+builder.Services.ConfigureServices();
 #endregion
 
 var app = builder.Build();

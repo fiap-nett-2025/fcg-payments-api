@@ -1,4 +1,4 @@
-﻿namespace FCG.Payments.Infra.Data
+﻿namespace FCG.Payments.Infra.Persistence.Config
 {
     public class MongoDbOptions
     {

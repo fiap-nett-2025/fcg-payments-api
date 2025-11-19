@@ -21,6 +21,7 @@ namespace FCG.Payments.Application
             services.AddTransient<IGameService, GameService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPaymentGatewayService, PaymentGatewayService>();
+            services.AddTransient<IPricingService, PricingService>();
         }
 
         public static void ConfigureHttpClients(this IServiceCollection services, IConfigurationSection apiSection)

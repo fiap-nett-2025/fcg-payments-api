@@ -1,6 +1,5 @@
 ﻿using FCG.Payments.Application.DTO.Game;
 using FCG.Payments.Application.Publishers.Interfaces;
-using FCG.Payments.Domain.Entities;
 using FCG.Payments.Domain.Messaging.Interfaces;
 using FCG.Payments.Infra.Messaging.Config;
 using Microsoft.Extensions.Options;

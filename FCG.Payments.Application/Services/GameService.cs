@@ -2,6 +2,7 @@
 using FCG.Payments.Application.Publishers.Interfaces;
 using FCG.Payments.Application.Services.Interfaces;
 using FCG.Payments.Domain.Entities;
+using FCG.Payments.Domain.Enums;
 
 namespace FCG.Payments.Application.Services
 {
@@ -22,7 +23,8 @@ namespace FCG.Payments.Application.Services
             return new GameDto
             {
                 Id = gameId,
-                Price = 9.99m
+                Price = 9.99m,
+                Genres = [GameGenre.Action]
             };
         }
 

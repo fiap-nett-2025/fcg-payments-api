@@ -13,30 +13,32 @@ namespace FCG.Payments.Application.Services
     {
         public async Task<(bool, string)> SendPaymentRequest(User user, Guid orderId)
         {
-            try
-            {
-                var client = httpClientFactory.CreateClient("PaymentGateway");
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
+            //try
+            //{
+            //    var client = httpClientFactory.CreateClient("PaymentGateway");
+            //    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
-                var dto = new PaymentGatewayRequestDto { OrderId = orderId.ToString() };
-                var json = JsonConvert.SerializeObject(dto);
-                var httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            //    var dto = new PaymentGatewayRequestDto { OrderId = orderId.ToString() };
+            //    var json = JsonConvert.SerializeObject(dto);
+            //    var httpContent = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync("api/Payment", httpContent);
-                response.EnsureSuccessStatusCode();
+            //    var response = await client.PostAsync("api/Payment", httpContent);
+            //    response.EnsureSuccessStatusCode();
 
-                var responseDto = await response.Content.ReadFromJsonAsync<PaymentGatewayResponseDto>();
+            //    var responseDto = await response.Content.ReadFromJsonAsync<PaymentGatewayResponseDto>();
 
-                if (responseDto == null)
-                    return (false, "");
+            //    if (responseDto == null)
+            //        return (false, "");
 
-                return (responseDto.PaymentStatus == PaymentStatus.Paid, responseDto.PaymentStatus.ToString());
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Error sending payment for order {OrderId}", orderId);
-                return (false, "");
-            }
+            //    return (responseDto.PaymentStatus == PaymentStatus.Paid, responseDto.PaymentStatus.ToString());
+            //}
+            //catch (Exception ex)
+            //{
+            //    logger.LogError(ex, "Error sending payment for order {OrderId}", orderId);
+            //    return (false, "");
+            //}
+
+            return (true, PaymentStatus.Paid.ToString());
         }
     }
 }

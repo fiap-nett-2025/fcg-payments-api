@@ -4,7 +4,7 @@ using FCG.Payments.Application.Services.Interfaces;
 using FCG.Payments.Domain.Entities;
 using FCG.Payments.Domain.Events.Cart;
 using FCG.Payments.Domain.Events.Order;
-using FCG.Payments.Infra.Data.Repository.Interfaces;
+using FCG.Payments.Infra.Persistence.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace FCG.Payments.Application.Services
@@ -14,7 +14,8 @@ namespace FCG.Payments.Application.Services
         ICartRepository cartRepository,
         IOrderRepository orderRepository,
         IEventStore eventStore,
-        IGameService gameService
+        IGameService gameService,
+        IPricingService pricingService
     ) : ICartService
     {
         public async Task<CartDto> GetCartAsync(User user)
@@ -45,7 +46,9 @@ namespace FCG.Payments.Application.Services
             var game = await gameService.GetGameByIdAsync(user, gameId)
                 ?? throw new InvalidOperationException("Game not found");
 
-            cart.AddItem(gameId, game.Price);
+            (decimal finalPrice, bool isPromotionalPrice) = await pricingService.CalculateFinalPrice(user, game);
+
+            cart.AddItem(gameId, finalPrice);
 
             await cartRepository.UpdateAsync(cart);
 
@@ -53,7 +56,9 @@ namespace FCG.Payments.Application.Services
             {
                 GameId = gameId,
                 UserId = user.Id,
-                UnitPrice = game.Price
+                UnitPrice = finalPrice,
+                IsPromotionalPrice = isPromotionalPrice,
+                OriginalPrice = game.Price
             });
 
             return cart;

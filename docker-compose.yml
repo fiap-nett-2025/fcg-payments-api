@@ -5,31 +5,65 @@ services:
     restart: always
     ports:
       - "27017:27017"
+    networks:
+      - my_custom_network
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin123
     volumes:
       - mongo-data:/data/db
+  rabbitmq:
+    image: rabbitmq:4.2.1-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # Porta do protocolo AMQP
+      - "15672:15672"   # Painel de administracao
     networks:
-      - my_custom_network
+        - my_custom_network
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
   api:
       container_name: fcg-payments-api
       build:
         context: .
         dockerfile: ./FCG.Payments.API/Dockerfile
       restart: always
+      networks:
+        - my_custom_network
       ports:
         - "5001:8080"
       environment:
         MongoDbSettings__ConnectionString: mongodb://admin:admin123@mongo:27017  
         MongoDbSettings__DatabaseName: FCGPaymentsDb
+        RabbitMq__Settings__HostName: rabbitmq
         ASPNETCORE_ENVIRONMENT: Development
       depends_on:
         - mongo
+        - rabbitmq
+  worker:
+      container_name: fcg-payments-worker
+      build:
+        context: .
+        dockerfile: ./FCG.Payments.Worker/Dockerfile
+      restart: always
+      networks:
+        - my_custom_network
+      environment:
+        MongoDbSettings__ConnectionString: mongodb://admin:admin123@mongo:27017  
+        MongoDbSettings__DatabaseName: FCGPaymentsDb
+        RabbitMq__Settings__HostName: rabbitmq
+      depends_on:
+        - rabbitmq
 networks:
   my_custom_network:
     external: false
 
 volumes:
   mongo-data:
+  rabbitmq_data:
   

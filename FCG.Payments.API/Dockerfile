@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["FCG.Payments.API/FCG.Payments.API.csproj", "FCG.Payments.API/"]
 COPY ["FCG.Payments.Application/FCG.Payments.Application.csproj", "FCG.Payments.Application/"]
 COPY ["FCG.Payments.Domain/FCG.Payments.Domain.csproj", "FCG.Payments.Domain/"]
-COPY ["FCG.Payments.Infra.Data/FCG.Payments.Infra.Data.csproj", "FCG.Payments.Infra.Data/"]
+COPY ["FCG.Payments.Infra/FCG.Payments.Infra.csproj", "FCG.Payments.Infra/"]
 RUN dotnet restore "./FCG.Payments.API/FCG.Payments.API.csproj"
 COPY . .
 WORKDIR "/src/FCG.Payments.API"

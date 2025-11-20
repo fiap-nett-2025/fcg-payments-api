@@ -20,5 +20,7 @@ namespace FCG.Payments.Domain.Events.Cart
 
         public required string GameId { get; set; }
         public decimal UnitPrice { get; set; }
+        public decimal OriginalPrice { get; set; }
+        public bool IsPromotionalPrice { get; set; }
     }
 }

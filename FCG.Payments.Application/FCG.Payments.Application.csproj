@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FCG.Payments.Domain\FCG.Payments.Domain.csproj" />
-    <ProjectReference Include="..\FCG.Payments.Infra.Data\FCG.Payments.Infra.Data.csproj" />
+    <ProjectReference Include="..\FCG.Payments.Infra\FCG.Payments.Infra.csproj" />
   </ItemGroup>
 
 </Project>

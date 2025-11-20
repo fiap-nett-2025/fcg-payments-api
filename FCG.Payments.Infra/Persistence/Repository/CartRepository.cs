@@ -1,8 +1,8 @@
 ﻿using FCG.Payments.Domain.Entities;
-using FCG.Payments.Infra.Data.Repository.Interfaces;
+using FCG.Payments.Infra.Persistence.Repository.Interfaces;
 using MongoDB.Driver;
 
-namespace FCG.Payments.Infra.Data.Repository
+namespace FCG.Payments.Infra.Persistence.Repository
 {
     public class CartRepository(IMongoDatabase database) : ICartRepository
     {

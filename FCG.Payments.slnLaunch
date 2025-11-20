@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Default Profile",
+    "Projects": [
+      {
+        "Path": "FCG.Payments.Worker\\FCG.Payments.Worker.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "FCG.Payments.API\\FCG.Payments.API.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

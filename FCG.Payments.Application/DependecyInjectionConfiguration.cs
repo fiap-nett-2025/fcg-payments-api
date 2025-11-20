@@ -1,7 +1,10 @@
-﻿using FCG.Payments.Application.Publishers;
+﻿using FCG.Payments.Application.DTO.Game;
+using FCG.Payments.Application.Handlers;
+using FCG.Payments.Application.Publishers;
 using FCG.Payments.Application.Publishers.Interfaces;
 using FCG.Payments.Application.Services;
 using FCG.Payments.Application.Services.Interfaces;
+using FCG.Payments.Domain.Messaging.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,7 +12,7 @@ namespace FCG.Payments.Application
 {
     public static class DependecyInjectionConfiguration
     {
-        public static void ConfigureServices(this IServiceCollection services)
+        public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
             // Publishers
             services.AddTransient<IGameServicePublisher, GameServicePublisher>();
@@ -22,9 +25,13 @@ namespace FCG.Payments.Application
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPaymentGatewayService, PaymentGatewayService>();
             services.AddTransient<IPricingService, PricingService>();
+
+            // Handlers
+            services.AddTransient<IMessageHandler<GameDto>, GameTestMessageHandler>();
+            return services;
         }
 
-        public static void ConfigureHttpClients(this IServiceCollection services, IConfigurationSection apiSection)
+        public static IServiceCollection ConfigureHttpClients(this IServiceCollection services, IConfigurationSection apiSection)
         {
             services.AddHttpClient("GamesApi", client =>
             {
@@ -40,6 +47,8 @@ namespace FCG.Payments.Application
             {
                 client.BaseAddress = new Uri(apiSection["PaymentGatewayBaseUrl"] ?? "");
             });
+
+            return services;
         }
     }
 }

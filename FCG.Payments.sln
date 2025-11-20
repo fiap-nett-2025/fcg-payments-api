@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Tests", "5 - Tests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Domain.Tests", "FCG.Payments.Domain.Tests\FCG.Payments.Domain.Tests.csproj", "{D0E3DE43-C9EF-4C94-8B2D-69E414186494}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FCG.Payments.Worker", "FCG.Payments.Worker\FCG.Payments.Worker.csproj", "{B40C1D64-910D-446D-BDBC-0C11754DE137}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0E3DE43-C9EF-4C94-8B2D-69E414186494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B40C1D64-910D-446D-BDBC-0C11754DE137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B40C1D64-910D-446D-BDBC-0C11754DE137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B40C1D64-910D-446D-BDBC-0C11754DE137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B40C1D64-910D-446D-BDBC-0C11754DE137}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{E1810C56-023D-4986-B73A-98D17BFCCAF7} = {3CC1C5FE-A8F3-4B41-9E45-5711044E3544}
 		{76A0AC45-7DE9-40FB-B06E-42EDD4218052} = {BF2642F4-0293-4730-A7F0-7344D816BE92}
 		{D0E3DE43-C9EF-4C94-8B2D-69E414186494} = {6780C07A-E522-4600-92A2-EE0111995C18}
+		{B40C1D64-910D-446D-BDBC-0C11754DE137} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE1F7273-D347-4207-9272-72E5384E3F3F}

@@ -98,8 +98,8 @@ if (!apiSection.Exists())
 builder.Services.ConfigureHttpClients(apiSection);
 #endregion
 
-builder.Services.ConfigurePersistence();
-builder.Services.ConfigureServices();
+builder.Services.ConfigurePersistence()
+                .ConfigureServices();
 #endregion
 
 var app = builder.Build();

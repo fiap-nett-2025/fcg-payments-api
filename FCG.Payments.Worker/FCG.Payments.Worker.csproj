@@ -4,10 +4,17 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-FCG.Payments.Worker-7a1c8e9c-4b44-4088-9424-79e8d739e759</UserSecretsId>
+    <UserSecretsId>dotnet-FCG.Payments.Worker-e1b760df-961a-4ff7-beb5-2f5503bac446</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FCG.Payments.Application\FCG.Payments.Application.csproj" />
+    <ProjectReference Include="..\FCG.Payments.Domain\FCG.Payments.Domain.csproj" />
   </ItemGroup>
 </Project>

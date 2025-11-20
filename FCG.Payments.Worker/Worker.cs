@@ -1,23 +1,26 @@
+using FCG.Payments.Application.DTO.Game;
+using FCG.Payments.Domain.Messaging.Interfaces;
+using FCG.Payments.Infra.Messaging.Config;
+using Microsoft.Extensions.Options;
+
 namespace FCG.Payments.Worker
 {
-    public class Worker : BackgroundService
+    public class Worker(ILogger<Worker> logger, IOptions<QueuesOptions> queuesOptions, IQueueConsumer consumer, IMessageHandler<GameDto> messageHandler) : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
-
-        public Worker(ILogger<Worker> logger)
-        {
-            _logger = logger;
-        }
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                if (_logger.IsEnabled(LogLevel.Information))
-                {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                }
-                await Task.Delay(1000, stoppingToken);
+                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                await consumer.StartAsync(queuesOptions.Value.GameTestQueue, messageHandler, stoppingToken);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError(ex, "Error on Worker: {ErrorMessage}", ex.Message);
+            }
+            finally
+            {
+                logger.LogInformation("Worker stopped at: {time}", DateTimeOffset.Now);
             }
         }
     }

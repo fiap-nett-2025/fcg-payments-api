@@ -14,7 +14,7 @@ namespace FCG.Payments.Infra
 {
     public static class DependecyInjectionConfiguration
     {
-        public static void ConfigureMongoDb(this IServiceCollection services)
+        public static IServiceCollection ConfigureMongoDb(this IServiceCollection services)
         {
             services.AddSingleton<IMongoClient>(sp =>
             {
@@ -28,9 +28,10 @@ namespace FCG.Payments.Infra
                 var client = new MongoClient(settings.ConnectionString);
                 return client.GetDatabase(settings.DatabaseName);
             });
+            return services;
         }
 
-        public static void ConfigureRabbitMq(this IServiceCollection services)
+        public static IServiceCollection ConfigureRabbitMq(this IServiceCollection services)
         {
             services.AddSingleton(sp =>
             {
@@ -62,13 +63,15 @@ namespace FCG.Payments.Infra
 
             services.AddTransient<IQueuePublisher, RabbitMqPublisher>();
             services.AddTransient<IQueueConsumer, RabbitMqConsumer>();
+            return services;
         }
 
-        public static void ConfigurePersistence(this IServiceCollection services)
+        public static IServiceCollection ConfigurePersistence(this IServiceCollection services)
         {
             services.AddTransient<IEventStore, MongoEventStore>();
             services.AddTransient<ICartRepository, CartRepository>();
             services.AddTransient<IOrderRepository, OrderRepository>();
+            return services;
         }
     }
 }

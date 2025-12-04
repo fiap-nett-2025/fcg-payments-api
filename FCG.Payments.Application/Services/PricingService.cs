@@ -29,16 +29,15 @@ namespace FCG.Payments.Application.Services
 
         private async Task<IEnumerable<PromotionDto>> GetActivePromotions(User user)
         {
-            //var client = httpClientFactory.CreateClient("GamesApi");
-            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
+            var client = httpClientFactory.CreateClient("GamesApi");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
-            //var response = await client.GetAsync($"api/Promotion/Actived");
-            //if (!response.IsSuccessStatusCode)
-            //    return [];
+            var response = await client.GetAsync($"api/Promotion/Actived");
+            if (!response.IsSuccessStatusCode)
+                return [];
 
-            //var responseDto = await response.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<PromotionDto>>>();
-            //return responseDto?.Data ?? [];
-            return [];
+            var responseDto = await response.Content.ReadFromJsonAsync<ApiResponse<IEnumerable<PromotionDto>>>();
+            return responseDto?.Data ?? [];
         }
     }
 }

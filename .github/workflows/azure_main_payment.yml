@@ -1,10 +1,7 @@
-
 name: Pipeline CI/CD (Azure)
 
-# on:
-#   workflow_dispatch:
-#   push:
-#     branches: [main]
+on:
+  workflow_dispatch:
 
 env:
   AZURE_CONTAINER_REGISTRY: fcgPaymentsApi

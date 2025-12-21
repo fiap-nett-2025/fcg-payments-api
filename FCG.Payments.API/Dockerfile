@@ -26,8 +26,6 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-FROM newrelic/newrelic-dotnet-agent:latest
-
 # ============================================
 # INSTALAÇÃO DO NEW RELIC
 # ============================================

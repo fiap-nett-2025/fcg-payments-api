@@ -1,5 +1,5 @@
 
-name: Pipeline CI/CD
+name: Pipeline CI/CD (Azure)
 
 on:
   workflow_dispatch:

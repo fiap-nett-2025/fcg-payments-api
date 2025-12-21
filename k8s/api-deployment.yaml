@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fcg-payments-api
+  labels:
+    app: fcg-payments-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fcg-payments-api
+  template:
+    metadata:
+      labels:
+        app: fcg-payments-api
+    spec:
+      containers:
+        - name: fcg-payments-api
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/fcg-payments-api:${IMAGE_TAG}
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ConnectionStrings__Default
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: connection-string
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

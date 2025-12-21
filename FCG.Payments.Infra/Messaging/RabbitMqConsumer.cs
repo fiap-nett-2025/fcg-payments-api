@@ -46,8 +46,6 @@ namespace FCG.Payments.Infra.Messaging
             };
 
             await channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer, cancellationToken: cancellationToken);
-
-            await Task.Delay(Timeout.Infinite, cancellationToken);
         }
     }
 }

@@ -54,7 +54,7 @@ jobs:
     # Build & Push da API
     - name: Build and push API image
       run: |
-        docker build -t fcg-payments-api -f FCG.Payments.API/Dockerfile FCG.Payments.API
+        docker build -t fcg-payments-api -f ./FCG.Payments.API/Dockerfile ./FCG.Payments.API
         docker tag fcg-payments-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fcg-payments-api:latest
         docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fcg-payments-api:latest
 

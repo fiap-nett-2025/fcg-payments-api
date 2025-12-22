@@ -7,8 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using RabbitMQ.Client;
-using FCG.Payments.Infra.Messaging;
 using FCG.Payments.Domain.Messaging.Interfaces;
+using FCG.Payments.Infra.Messaging.Rabbit;
+using Amazon.SQS;
+using Microsoft.Extensions.Configuration;
 
 namespace FCG.Payments.Infra
 {
@@ -63,6 +65,13 @@ namespace FCG.Payments.Infra
 
             services.AddTransient<IQueuePublisher, RabbitMqPublisher>();
             services.AddTransient<IQueueConsumer, RabbitMqConsumer>();
+            return services;
+        }
+
+        public static IServiceCollection ConfigureAmazonSQS(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonSQS>();
             return services;
         }
 

@@ -4,6 +4,7 @@ using FCG.Payments.Application.Middleware;
 using FCG.Payments.Infra;
 using FCG.Payments.Infra.Messaging.Config;
 using FCG.Payments.Infra.Persistence.Config;
+using FCG.Payments.Worker;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
@@ -69,25 +70,29 @@ builder.Services.Configure<MongoDbOptions>(mongoSection);
 builder.Services.ConfigureMongoDb();
 #endregion
 
-#region RabbitMq
-var rabbitSection = builder.Configuration.GetSection("RabbitMq");
+var messagingSection = builder.Configuration.GetSection("Messaging");
+if (!messagingSection.Exists())
+    throw new InvalidOperationException("Section 'Messaging' not found in configuration.");
 
-var rabbitSettingsSection = rabbitSection.GetSection("Settings");
-if (!rabbitSettingsSection.Exists())
-    throw new InvalidOperationException("Section 'RabbitMqSettings' not found in configuration.");
-builder.Services.Configure<RabbitMqOptions>(rabbitSettingsSection);
-
-var exchangesSection = rabbitSection.GetSection("Exchanges");
-if (!exchangesSection.Exists())
-    throw new InvalidOperationException("Section 'Exchanges' not found in configuration.");
-builder.Services.Configure<ExchangesOptions>(exchangesSection);
-
-var queuesSection = rabbitSection.GetSection("Queues");
-if (!queuesSection.Exists())
-    throw new InvalidOperationException("Section 'Queues' not found in configuration.");
+var queuesSection = messagingSection.GetSection("Queues");
 builder.Services.Configure<QueuesOptions>(queuesSection);
 
-builder.Services.ConfigureRabbitMq();
+builder.Services.ConfigureAmazonSQS(builder.Configuration);
+
+#region RabbitMq (Not used)
+//var rabbitSection = builder.Configuration.GetSection("RabbitMq");
+
+//var rabbitSettingsSection = rabbitSection.GetSection("Settings");
+//if (!rabbitSettingsSection.Exists())
+//    throw new InvalidOperationException("Section 'RabbitMqSettings' not found in configuration.");
+//builder.Services.Configure<RabbitMqOptions>(rabbitSettingsSection);
+
+//var exchangesSection = rabbitSection.GetSection("Exchanges");
+//if (!exchangesSection.Exists())
+//    throw new InvalidOperationException("Section 'Exchanges' not found in configuration.");
+//builder.Services.Configure<ExchangesOptions>(exchangesSection);
+
+//builder.Services.ConfigureRabbitMq();
 #endregion
 
 #region API clients
@@ -101,6 +106,8 @@ builder.Services.ConfigureHttpClients(apiSection);
 builder.Services.ConfigurePersistence()
                 .ConfigureServices();
 #endregion
+
+builder.Services.AddHostedService<Worker>();
 
 var app = builder.Build();
 

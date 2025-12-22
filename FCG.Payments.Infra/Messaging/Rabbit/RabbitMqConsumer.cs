@@ -6,7 +6,7 @@ using RabbitMQ.Client.Events;
 using System.Text;
 
 
-namespace FCG.Payments.Infra.Messaging
+namespace FCG.Payments.Infra.Messaging.Rabbit
 {
     public class RabbitMqConsumer(ConnectionFactory factory, ILogger<RabbitMqConsumer> logger) : IQueueConsumer
     {

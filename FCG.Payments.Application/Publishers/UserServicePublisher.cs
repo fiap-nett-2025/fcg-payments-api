@@ -16,8 +16,8 @@ namespace FCG.Payments.Application.Publishers
         {
             return publisher.PublishAsync(
                 dto,
-                exchanges.Value.UserExchange,
-                queues.Value.UserGameLibraryAddedQueue
+                queues.Value.UserGameLibraryAddedQueue,
+                exchanges.Value.UserExchange
             );
         }
     }

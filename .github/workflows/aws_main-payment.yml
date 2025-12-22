@@ -52,6 +52,7 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     # Build & Push da API
+    #TODO: Colocar numa variavel
     - name: Build and push API image
       run: |
         docker build -t fcg-payments-api -f ./FCG.Payments.API/Dockerfile .
@@ -72,8 +73,8 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         mkdir -p rendered
-        envsubst < k8s/api-deployment.yaml > rendered/api-deployment.yaml
-        envsubst < k8s/worker-deployment.yaml > rendered/worker-deployment.yaml
+        envsubst < k8s/payments-api-deployment.yaml > rendered/payments-api-deployment.yaml
+        envsubst < k8s/payments-api-service-account.yaml > rendered/payments-api-service-account.yaml
 
     # Deploy no Kubernetes
     - name: Apply Kubernetes manifests

@@ -4,6 +4,9 @@ on:
   push:
     branches: [ "main" ]
 
+env:
+    FCG_API_NAME: fcg-payments-api
+    FCG_API_DOCKERFILE: ./FCG.Payments.API/Dockerfile
 jobs:
   test:
     name: Running Tests
@@ -52,12 +55,11 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     # Build & Push da API
-    #TODO: Colocar numa variavel
     - name: Build and push API image
       run: |
-        docker build -t fcg-payments-api -f ./FCG.Payments.API/Dockerfile .
-        docker tag fcg-payments-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fcg-payments-api:latest
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fcg-payments-api:latest
+        docker build -t ${{env.FCG_API_NAME}} -f ${{env.FCG_API_DOCKERFILE}} .
+        docker tag ${{env.FCG_API_NAME}}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{env.FCG_API_NAME}}:latest
+        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{env.FCG_API_NAME}}:latest
 
     # Configura kubectl para EKS
     - name: Update kubeconfig

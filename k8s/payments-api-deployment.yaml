@@ -15,28 +15,15 @@ spec:
         app: fcg-payments-api
     spec:
       serviceAccountName: fcg-payments-sa
-      volumes:
-        - name: secrets-store
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: fcg-api-aws-secrets
       containers:
         - name: fcg-payments-api
           image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/fcg-payments-api:${IMAGE_TAG}
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: secrets-store
-              mountPath: /mnt/secrets
-              readOnly: true
           env:
             - name: ASPNETCORE_ENVIRONMENT
               value: "Production"
           envFrom:
-            - secretRef:
-                name: fcg-payments-secrets
             - configMapRef:
                 name: fcg-payments-config
           resources:

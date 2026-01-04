@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "no-aws-secret" ]
 
 env:
     FCG_API_NAME: fcg-payments-api

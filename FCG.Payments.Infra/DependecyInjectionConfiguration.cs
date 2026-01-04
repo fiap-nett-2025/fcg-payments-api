@@ -11,6 +11,7 @@ using FCG.Payments.Domain.Messaging.Interfaces;
 using FCG.Payments.Infra.Messaging.Rabbit;
 using Amazon.SQS;
 using Microsoft.Extensions.Configuration;
+using FCG.Payments.Infra.Messaging.Sqs;
 
 namespace FCG.Payments.Infra
 {
@@ -72,6 +73,9 @@ namespace FCG.Payments.Infra
         {
             services.AddDefaultAWSOptions(configuration.GetAWSOptions());
             services.AddAWSService<IAmazonSQS>();
+
+            services.AddTransient<IQueuePublisher, AmazonSqsPublisher>();
+            services.AddTransient<IQueueConsumer, AmazonSqsConsumer>();
             return services;
         }
 

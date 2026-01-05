@@ -21,7 +21,7 @@ spec:
             driver: secrets-store.csi.k8s.io
             readOnly: true
             volumeAttributes:
-              secretProviderClass: fcg-api-aws-secrets
+              secretProviderClass: fcg-api-secrets
       containers:
         - name: fcg-payments-api
           image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/fcg-payments-api:latest

@@ -3,7 +3,7 @@ using FCG.Payments.Domain.Messaging.Interfaces;
 using FCG.Payments.Infra.Messaging.Config;
 using Microsoft.Extensions.Options;
 
-namespace FCG.Payments.Worker
+namespace FCG.Payments.API
 {
     public class Worker(ILogger<Worker> logger, IOptions<QueuesOptions> queuesOptions, IQueueConsumer consumer, IMessageHandler<GameDto> messageHandler) : BackgroundService
     {

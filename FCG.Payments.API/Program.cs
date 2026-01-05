@@ -1,10 +1,10 @@
-﻿using FCG.Payments.API.Configurations;
+﻿using FCG.Payments.API;
+using FCG.Payments.API.Configurations;
 using FCG.Payments.Application;
 using FCG.Payments.Application.Middleware;
 using FCG.Payments.Infra;
 using FCG.Payments.Infra.Messaging.Config;
 using FCG.Payments.Infra.Persistence.Config;
-using FCG.Payments.Worker;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;

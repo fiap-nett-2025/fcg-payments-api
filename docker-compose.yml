@@ -45,20 +45,6 @@ services:
       depends_on:
         - mongo
         - rabbitmq
-  worker:
-      container_name: fcg-payments-worker
-      build:
-        context: .
-        dockerfile: ./FCG.Payments.Worker/Dockerfile
-      restart: always
-      networks:
-        - my_custom_network
-      environment:
-        MongoDbSettings__ConnectionString: mongodb://admin:admin123@mongo:27017  
-        MongoDbSettings__DatabaseName: FCGPaymentsDb
-        RabbitMq__Settings__HostName: rabbitmq
-      depends_on:
-        - rabbitmq
 networks:
   my_custom_network:
     external: false

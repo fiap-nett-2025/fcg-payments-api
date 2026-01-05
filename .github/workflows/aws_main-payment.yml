@@ -48,7 +48,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-        aws-region: ${{ secrets.AWS_REGION }}
+        aws-region: ${{ env.AWS_REGION }}
 
     # Login no ECR
     - name: Login to Amazon ECR
@@ -58,26 +58,27 @@ jobs:
     - name: Build and push API image
       run: |
         docker build -t ${{env.FCG_API_NAME}} -f ${{env.FCG_API_DOCKERFILE}} .
-        docker tag ${{env.FCG_API_NAME}}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{env.FCG_API_NAME}}:latest
-        docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{env.FCG_API_NAME}}:latest
+        docker tag ${{env.FCG_API_NAME}}:latest ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{env.FCG_API_NAME}}:latest
+        docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{env.FCG_API_NAME}}:latest
 
     # Configura kubectl para EKS
     - name: Update kubeconfig
       run: |
         aws eks update-kubeconfig \
-          --name ${{ secrets.EKS_CLUSTER_NAME }} \
-          --region ${{ secrets.AWS_REGION }}
+          --name ${{ env.EKS_CLUSTER_NAME }} \
+          --region ${{ env.AWS_REGION }}
     
     - name: Render Kubernetes manifest
       env:
-        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-        AWS_REGION: ${{ secrets.AWS_REGION }}
+        AWS_ACCOUNT_ID: ${{ env.AWS_ACCOUNT_ID }}
+        AWS_REGION: ${{ env.AWS_REGION }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
         mkdir -p rendered
+        envsubst < k8s/payments-api-config.yaml > rendered/payments-api-config.yaml
         envsubst < k8s/payments-api-deployment.yaml > rendered/payments-api-deployment.yaml
         envsubst < k8s/payments-api-service-account.yaml > rendered/payments-api-service-account.yaml
-
+        envsubst < k8s/payments-api-service.yaml > rendered/payments-api-service.yaml
     # Deploy no Kubernetes
     - name: Apply Kubernetes manifests
       run: |

@@ -75,6 +75,7 @@ jobs:
         IMAGE_TAG: ${{ github.sha }}
       run: |
         mkdir -p rendered
+        envsubst < k8s/fcg-api-secret-provider.yaml > rendered/fcg-api-secret-provider.yaml
         envsubst < k8s/payments-api-config.yaml > rendered/payments-api-config.yaml
         envsubst < k8s/payments-api-deployment.yaml > rendered/payments-api-deployment.yaml
         envsubst < k8s/payments-api-service-account.yaml > rendered/payments-api-service-account.yaml

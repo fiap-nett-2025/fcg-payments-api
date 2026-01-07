@@ -14,7 +14,7 @@ spec:
       labels:
         app: fcg-payments-api
     spec:
-      serviceAccountName: fcg-payments-sa
+      #serviceAccountName: fcg-payments-sa
       containers:
         - name: fcg-payments-api
           image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/fcg-payments-api:latest

@@ -16,11 +16,15 @@ namespace FCG.Payments.Infra.Messaging.Sqs
             IMessageHandler<T> handler,
             CancellationToken cancellationToken = default)
         {
+            if (handler is null)
+                throw new ArgumentNullException(nameof(handler), 
+                    $"IMessageHandler<{typeof(T).Name}> is null. Check DI registration.");
+
             // Resolve URL da fila
             var queueUrlResponse = await sqs.GetQueueUrlAsync(queueName, cancellationToken);
             var queueUrl = queueUrlResponse.QueueUrl;
 
-            logger.LogInformation("Listening SQS queue {QueueName}", queueName);
+            logger.LogInformation("Listening SQS queue {QueueName}, {@QueueResponse}", queueName, JsonConvert.SerializeObject(queueUrlResponse));
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -34,7 +38,9 @@ namespace FCG.Payments.Infra.Messaging.Sqs
 
                 var response = await sqs.ReceiveMessageAsync(receiveRequest, cancellationToken);
 
-                foreach (var message in response.Messages)
+                logger.LogInformation("Response from {QueueName}: {@Response}", queueName, JsonConvert.SerializeObject(response));
+
+                foreach (var message in response?.Messages ?? [])
                 {
                     try
                     {

@@ -27,7 +27,7 @@ namespace FCG.Payments.Application
             services.AddTransient<IPricingService, PricingService>();
 
             // Handlers
-            services.AddTransient<IMessageHandler<GameDto>, GameTestMessageHandler>();
+            services.AddScoped<IMessageHandler<GameDto>, GameTestMessageHandler>();
             return services;
         }
 

@@ -24,7 +24,7 @@ namespace FCG.Payments.Infra.Messaging.Sqs
             var queueUrlResponse = await sqs.GetQueueUrlAsync(queueName, cancellationToken);
             var queueUrl = queueUrlResponse.QueueUrl;
 
-            logger.LogInformation("Listening SQS queue {QueueName}, {@QueueResponse}", queueName, queueUrlResponse);
+            logger.LogInformation("Listening SQS queue {QueueName}, {@QueueResponse}", queueName, JsonConvert.SerializeObject(queueUrlResponse));
 
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -38,7 +38,7 @@ namespace FCG.Payments.Infra.Messaging.Sqs
 
                 var response = await sqs.ReceiveMessageAsync(receiveRequest, cancellationToken);
 
-                logger.LogInformation("Response from {QueueName}: {@Response}", queueName, response);
+                logger.LogInformation("Response from {QueueName}: {@Response}", queueName, JsonConvert.SerializeObject(response));
 
                 foreach (var message in response?.Messages ?? [])
                 {

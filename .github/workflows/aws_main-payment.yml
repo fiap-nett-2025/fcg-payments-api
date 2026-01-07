@@ -76,7 +76,6 @@ jobs:
       run: |
         mkdir -p rendered
         envsubst < k8s/payments-api-deployment.yaml > rendered/payments-api-deployment.yaml
-        envsubst < k8s/payments-api-service-account.yaml > rendered/payments-api-service-account.yaml
         cp k8s/payments-api-config.yaml rendered/payments-api-config.yaml
         cp k8s/payments-api-service.yaml rendered/payments-api-service.yaml
 

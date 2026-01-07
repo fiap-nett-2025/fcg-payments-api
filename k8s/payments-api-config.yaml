@@ -8,4 +8,4 @@ data:
   API__PaymentGatewayBaseUrl: "https://payment-gateway-hjgsdacahzdmazdc.canadacentral-01.azurewebsites.net"
   #somente para testes
   JwtSettings__Key: "maisValeUmaPedraNoCaminhoQueDuasNoRim"
-  MongoDb__ConnectionString: "mongodb://fcgaws:fcgaws@fcg.66opata.mongodb.net:27017"
+  MongoDbSettings__ConnectionString: "mongodb://fcgaws:fcgaws@fcg.66opata.mongodb.net:27017"

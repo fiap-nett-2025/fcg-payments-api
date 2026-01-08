@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: fcg-payments-api
-          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/fcg-payments-api:latest
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/fcg-payments-api:${IMAGE_TAG}
           ports:
             - containerPort: 8080
           env:

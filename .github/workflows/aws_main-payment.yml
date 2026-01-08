@@ -67,6 +67,16 @@ jobs:
         aws eks update-kubeconfig \
           --name ${{ vars.EKS_CLUSTER_NAME }} \
           --region ${{ vars.AWS_REGION }}
+
+    # Cria/atualiza o Secret no cluster usando GitHub Secrets
+    - name: Apply Kubernetes Secret (from GitHub Secrets)
+      run: |
+        kubectl -n default create secret generic aws-credentials \
+          --from-literal=MongoDbSettings__ConnectionString='${{ secrets.MONGODB_CONN }}' \
+          --from-literal=JwtSettingsKey='${{ secrets.JWT_SETTINGS_KEY }}' \
+          --from-literal=ConnectionStrings__DefaultConnection='${{ secrets.SQL_DEFAULT_CONN }}' \
+          --from-literal=SqlServerSettings__GameConnection='${{ secrets.SQL_GAME_CONN }}' \
+          --dry-run=client -o yaml | kubectl apply -f -
     
     - name: Render Kubernetes manifest
       env:

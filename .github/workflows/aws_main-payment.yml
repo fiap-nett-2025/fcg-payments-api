@@ -74,12 +74,17 @@ jobs:
     - name: Apply Kubernetes Secret (from GitHub Secrets)
       run: |
         kubectl -n default create secret generic aws-credentials \
+          --from-literal=AWS_ACCESS_KEY_ID='${{ secrets.AWS_ACCESS_KEY_ID }}' \
+          --from-literal=AWS_SECRET_ACCESS_KEY='${{ secrets.AWS_SECRET_ACCESS_KEY }}' \
+          --from-literal=AWS_SESSION_TOKEN='${{ secrets.AWS_SESSION_TOKEN }}' \
+          --from-literal=AWS_REGION='${{ vars.AWS_REGION }}' \
+          --from-literal=AWS_DEFAULT_REGION='${{ vars.AWS_REGION }}' \
           --from-literal=MongoDbSettings__ConnectionString='${{ secrets.MONGODB_CONN }}' \
           --from-literal=JwtSettingsKey='${{ secrets.JWT_SETTINGS_KEY }}' \
           --from-literal=ConnectionStrings__DefaultConnection='${{ secrets.SQL_DEFAULT_CONN }}' \
           --from-literal=SqlServerSettings__GameConnection='${{ secrets.SQL_GAME_CONN }}' \
           --dry-run=client -o yaml | kubectl apply -f -
-    
+      
     - name: Render Kubernetes manifest
       env:
         AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}

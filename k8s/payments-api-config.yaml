@@ -6,6 +6,3 @@ data:
   API__GamesApiBaseUrl: "https://fcg-game-api.whitesea-88353420.westus2.azurecontainerapps.io"
   API__UsersApiBaseUrl: "https://fcg-user-api.whitesea-88353420.westus2.azurecontainerapps.io"
   API__PaymentGatewayBaseUrl: "https://payment-gateway-hjgsdacahzdmazdc.canadacentral-01.azurewebsites.net"
-  #somente para testes
-  JwtSettings__Key: "maisValeUmaPedraNoCaminhoQueDuasNoRim"
-  MongoDbSettings__ConnectionString: "mongodb+srv://fcgaws:fcgaws@fcg.66opata.mongodb.net/fcg-payments?retryWrites=true&w=majority"

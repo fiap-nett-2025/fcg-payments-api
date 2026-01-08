@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: fcg-payments-config
 data:
-  API__GamesApiBaseUrl: "https://fcg-game-api.whitesea-88353420.westus2.azurecontainerapps.io"
-  API__UsersApiBaseUrl: "https://fcg-user-api.whitesea-88353420.westus2.azurecontainerapps.io"
+  API__GamesApiBaseUrl: "http://a6587e70854324f0382892a6190a8249-321469658.us-east-1.elb.amazonaws.com"
+  API__UsersApiBaseUrl: "http://a713a61616cf640cab8a8b32af674486-1121567036.us-east-1.elb.amazonaws.com"
   API__PaymentGatewayBaseUrl: "https://payment-gateway-hjgsdacahzdmazdc.canadacentral-01.azurewebsites.net"

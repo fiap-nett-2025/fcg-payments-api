@@ -6,3 +6,4 @@ data:
   API__GamesApiBaseUrl: "http://a6587e70854324f0382892a6190a8249-321469658.us-east-1.elb.amazonaws.com"
   API__UsersApiBaseUrl: "http://a713a61616cf640cab8a8b32af674486-1121567036.us-east-1.elb.amazonaws.com"
   API__PaymentGatewayBaseUrl: "https://payment-gateway-hjgsdacahzdmazdc.canadacentral-01.azurewebsites.net"
+  NEW_RELIC_APP_NAME: "fcg-payments-api"

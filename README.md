@@ -14,14 +14,9 @@ O serviço de pagamentos é responsável por gerenciar o carrinho e os pedidos n
 :space_invader: Essa API foi feita com Event Sourcing, registrando os eventos no nosso banco MongoDB. 
 <img height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" />
 
-A lógica de <B>Pagamento</b> dessa API é:
-- O usuário se autentifica com seu token JWT, o programa extrai o UserId do token JWT enviado no cabeçalho `Authorization`;
-- Usuário executa o método "api/Order/{orderId}/pay";
-
 ## :envelope_with_arrow: <img align="center" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg"> Messageria
 
-
-Se o pagamento for bem sucedido, essa API irá publicar uma mensagem na fila "user-game-library-added-queue" e outra na fila "game-popularity-increased-queue". Essas mensagens em fila serão consumidas pelo worker da API de Usuários e pelo worker da API de Games.
+Quando o usuário faz um POST no endpoint "api/Order/{orderId}/pay", se o pagamento for bem sucedido, essa API irá publicar uma mensagem na fila "user-game-library-added-queue" e outra na fila "game-popularity-increased-queue". Essas mensagens em fila serão consumidas pelo worker da API de Usuários e pelo worker da API de Games.
 
 Nesse projeto fazemos a comunicação entre os microsserviços usando o Amazon SQS. Abaixo está a lista dos arquivos principais envolvidos com a messageria:
 - Pasta k8s (nessa pasta se encontram configMaps e arquivo de deployment);

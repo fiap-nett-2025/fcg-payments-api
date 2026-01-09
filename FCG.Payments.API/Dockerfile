@@ -20,7 +20,7 @@ RUN dotnet build "./FCG.Payments.API.csproj" -c $BUILD_CONFIGURATION -o /app/bui
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./FCG.Paymnets.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./FCG.Payments.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 
 # Stage final: usa a imagem do ECR com aspnet + new relic

@@ -18,7 +18,8 @@ A lógica de <B>Pagamento</b> dessa API é:
 - O usuário se autentifica com seu token JWT, o programa extrai o UserId do token JWT enviado no cabeçalho `Authorization`;
 - Usuário executa o método "api/Order/{orderId}/pay";
 
-### :envelope_with_arrow:  Messageria
+## :envelope_with_arrow: <img align="center" height="30" width="40" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg"> Messageria
+
 
 Se o pagamento for bem sucedido, essa API irá publicar uma mensagem na fila "user-game-library-added-queue" e outra na fila "game-popularity-increased-queue". Essas mensagens em fila serão consumidas pelo worker da API de Usuários e pelo worker da API de Games.
 

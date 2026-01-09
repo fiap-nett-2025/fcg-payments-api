@@ -17,14 +17,14 @@ O serviço de pagamentos é responsável por gerenciar o carrinho e os pedidos n
 A lógica de <B>Pagamento</b> dessa API é:
 - O usuário se autentifica com seu token JWT, o programa extrai o UserId do token JWT enviado no cabeçalho `Authorization`;
 - Usuário executa o método "api/Order/{orderId}/pay";
-- A <b>Azure function</b> é chamada e ela gera um status de pagamento com **70% de chance de sucesso** e **30% de chance de falha**, com variações de tipo de falha;  
-- Retorna para o usuário o resultado como JSON, contendo `UserId`, `PaymentStatus` e `Timestamp`.
 
-### :computer: Comunicação com a API de Usuarios e com a API de Jogos
+### :envelope_with_arrow:  Messageria
 
-Para usar a API de Pagamentos é necessário <b>fazer autenticação via token JWT obtido pelo metodo de login da api de Usuários</b>. A API de Pagamentos se comunica com o API de Jogos para pegar o `GameId` que será adcionado ao carrinho. 
+Se o pagamento for bem sucedido, essa API irá publicar uma mensagem na fila "user-game-library-added-queue" e outra na fila "game-popularity-increased-queue". Essas mensagens em fila serão consumidas pelo worker da API de Usuários e pelo worker da API de Games.
 
-Além disso, depois que o pagamento com a Azure Function é processado se ele for bem sucedido, essa API irá acessar a API de Usuários para cadastrar os novos jogos adquiridos na biblioteca de jogos do usuário e também irá aumentar a popularidade dos jogos comprados, acessando a API de Jogos novamente.
+Nesse projeto fazemos a comunicação entre os microsserviços usando o Amazon SQS. Abaixo está a lista dos arquivos principais envolvidos com a messageria:
+- Pasta k8s (nessa pasta se encontram configMaps e arquivo de deployment);
+- FCG.Payments.Infra.Messaging.Sqs.AmazonSqsPublisher.
 
 ## ⚙️ Tecnologias e Plataformas utilizadas
 
